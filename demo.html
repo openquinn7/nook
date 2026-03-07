@@ -416,6 +416,39 @@
       const [showWorld, setShowWorld] = useState(false);
       const [showOnboarding, setShowOnboarding] = useState(false);
 
+      // Interactive dashboard state
+      const [sparks, setSparks] = useState(0);
+      const [activity, setActivity] = useState([]);
+      const [showSparkFloat, setShowSparkFloat] = useState(false);
+      const [lastSparkCount, setLastSparkCount] = useState(0);
+
+      // Simulate task completion
+      const completeTask = () => {
+        const tasks = [
+          { name: 'research job', sparks: 3 },
+          { name: 'data fetch', sparks: 1 },
+          { name: 'analysis', sparks: 2 },
+          { name: 'code review', sparks: 1 },
+          { name: 'bug fix', sparks: 2 },
+          { name: 'deployment', sparks: 2 }
+        ];
+        const task = tasks[Math.floor(Math.random() * tasks.length)];
+        const newSparks = sparks + task.sparks;
+
+        setLastSparkCount(task.sparks);
+        setSparks(newSparks);
+        setShowSparkFloat(true);
+
+        setActivity(prev => [{
+          sparks: '+' + task.sparks,
+          task: task.name,
+          time: 'just now',
+          color: '#82E0AA'
+        }, ...prev.slice(0, 4)]);
+
+        setTimeout(() => setShowSparkFloat(false), 1500);
+      };
+
       return (
         <div style={{
           fontFamily: '"VT323", monospace',
@@ -431,6 +464,7 @@
             @keyframes sprite-failure { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
             @keyframes sprite-sleeping { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
             @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+            @keyframes spark-float { 0% { opacity: 1; transform: translateY(0) scale(1); } 50% { opacity: 1; transform: translateY(-20px) scale(1.2); } 100% { opacity: 0; transform: translateY(-40px) scale(0.8); } }
           `}</style>
 
           {/* Header */}
@@ -443,32 +477,70 @@
 
           {/* Agent Dashboard */}
           <div style={{ marginBottom: '30px', backgroundColor: '#0f172a', borderRadius: '12px', padding: '20px', border: '1px solid #334155' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-              <Sprite variant="worker" state="idle" size={48} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px', position: 'relative' }}>
+              <div style={{ position: 'relative' }}>
+                <Sprite variant="worker" state="idle" size={48} />
+                {/* Spark float animation */}
+                {showSparkFloat && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '-10px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    color: '#f39c12',
+                    animation: 'spark-float 1.5s ease-out forwards',
+                    textShadow: '0 0 10px rgba(243, 156, 18, 0.8)',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    ⚡ +{lastSparkCount}
+                  </div>
+                )}
+              </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>Agent: Quinn</div>
-                <div style={{ fontSize: '12px', color: '#7f8c8d' }}>Status: <span style={{ color: '#82E0AA' }}>●</span> researching</div>
+                <div style={{ fontSize: '12px', color: '#7f8c8d' }}>Status: <span style={{ color: '#82E0AA' }}>●</span> working</div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#f39c12' }}>⚡ 1,482</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#f39c12' }}>⚡ {sparks.toLocaleString()}</div>
                 <div style={{ fontSize: '10px', color: '#7f8c8d' }}>sparks</div>
               </div>
             </div>
 
             <div style={{ borderTop: '1px solid #334155', paddingTop: '12px' }}>
-              <div style={{ fontSize: '11px', color: '#7f8c8d', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Recent Activity</div>
-              {[
-                { sparks: '+3', task: 'research job', time: '2m ago', color: '#82E0AA' },
-                { sparks: '+1', task: 'data fetch', time: '5m ago', color: '#82E0AA' },
-                { sparks: '+2', task: 'analysis', time: '12m ago', color: '#82E0AA' },
-                { sparks: '+1', task: 'code review', time: '18m ago', color: '#82E0AA' }
-              ].map((activity, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 0', fontSize: '12px' }}>
-                  <span style={{ color: activity.color, fontWeight: 'bold', minWidth: '30px' }}>{activity.sparks}</span>
-                  <span style={{ color: '#fff', flex: 1 }}>{activity.task}</span>
-                  <span style={{ color: '#7f8c8d' }}>{activity.time}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <div style={{ fontSize: '11px', color: '#7f8c8d', textTransform: 'uppercase', letterSpacing: '1px' }}>Recent Activity</div>
+                <button
+                  onClick={completeTask}
+                  style={{
+                    padding: '6px 12px',
+                    fontSize: '11px',
+                    fontFamily: 'inherit',
+                    backgroundColor: '#f39c12',
+                    color: '#1a1a2e',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  + Complete Task
+                </button>
+              </div>
+              {activity.length === 0 ? (
+                <div style={{ fontSize: '12px', color: '#7f8c8d', textAlign: 'center', padding: '20px' }}>
+                  Click "Complete Task" to earn sparks!
                 </div>
-              ))}
+              ) : (
+                activity.map((item, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 0', fontSize: '12px' }}>
+                    <span style={{ color: item.color, fontWeight: 'bold', minWidth: '35px' }}>⚡ {item.sparks}</span>
+                    <span style={{ color: '#fff', flex: 1 }}>{item.task}</span>
+                    <span style={{ color: '#7f8c8d' }}>{item.time}</span>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
