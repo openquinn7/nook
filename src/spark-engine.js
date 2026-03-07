@@ -5,6 +5,28 @@
  * Spec: Spark Engine Spec V1.txt
  */
 
+const crypto = require('crypto');
+
+// Verification levels per spec
+const VERIFICATION_LEVELS = {
+  NONE: 0,           // No verification
+  OUTPUT: 1,         // Task completed, output present
+  AUTOMATED: 2,      // Output validated by tests/checks
+  HUMAN: 3           // Human confirmation or external approval
+};
+
+// Simple spark formula: 1 verified task = 1 spark (v1 simplification)
+const SPARK_FORMULA_SIMPLE = (tokens, verificationLevel) => {
+  if (verificationLevel < VERIFICATION_LEVELS.OUTPUT) return 0;
+  // Level 1: 1 spark per task
+  if (verificationLevel === VERIFICATION_LEVELS.OUTPUT) return 1;
+  // Level 2: 2 sparks (validated)
+  if (verificationLevel === VERIFICATION_LEVELS.AUTOMATED) return 2;
+  // Level 3: 3 sparks (human confirmed)
+  return 3;
+};
+
+// Legacy formula (kept for compatibility)
 const SPARK_FORMULA = (tokens, distinctWorkUnits) => {
   const K = 1; // Normalization constant
   return K * Math.sqrt(tokens / 1000) * Math.log(distinctWorkUnits + 1);
@@ -41,6 +63,33 @@ class SparkEngine {
     this.dailyCap = options.dailyCap || RATE_LIMITS.daily;
     this.events = []; // All events
     this.lifetimeSparks = 0;
+    this.lastEventHash = null; // For hash-chaining
+  }
+
+  /**
+   * Compute hash of an event for immutability
+   */
+  computeEventHash(event) {
+    const data = JSON.stringify({
+      ...event,
+      previousHash: this.lastEventHash
+    });
+    return crypto.createHash('sha256').update(data).digest('hex');
+  }
+
+  /**
+   * Verify event chain integrity
+   */
+  verifyChain() {
+    let prevHash = null;
+    for (const record of this.events) {
+      const computed = this.computeEventHash(record.event);
+      if (record.hash !== computed) {
+        return { valid: false, brokenAt: record.id };
+      }
+      prevHash = record.hash;
+    }
+    return { valid: true };
   }
 
   /**
@@ -51,9 +100,15 @@ class SparkEngine {
     // Validate required fields per Event Protocol spec
     this.validateEvent(event);
 
+    // Get verification level (default to OUTPUT if not specified)
+    const verificationLevel = event.verification || VERIFICATION_LEVELS.OUTPUT;
+
+    // Compute hash for immutability
+    const eventHash = this.computeEventHash(event);
+
     // Only agent.completed events contribute sparks
     if (event.type !== 'agent.completed') {
-      this.recordEvent(event, 0);
+      this.recordEvent(event, 0, eventHash);
       return {
         event,
         sparks: 0,
@@ -68,26 +123,15 @@ class SparkEngine {
       e => e.timestamp >= windowStart && e.event.agentId === event.agentId
     );
 
-    // Calculate base sparks
+    // Calculate base sparks using simplified v1 formula
     const tokens = event.tokens || 0;
-    const workUnitCounts = this.getWorkUnitCounts(windowEvents);
-    const distinctWorkUnits = Object.keys(workUnitCounts).length;
-
-    // Check if current workUnitId is new in this window
-    const currentWorkUnitId = event.workUnitId;
-    const isNewWorkUnit = !workUnitCounts[currentWorkUnitId];
-
-    // Add 1 if current workUnitId is new (for the formula)
-    const adjustedDistinctWorkUnits = isNewWorkUnit
-      ? distinctWorkUnits + 1
-      : distinctWorkUnits;
+    const baseSparks = SPARK_FORMULA_SIMPLE(tokens, verificationLevel);
 
     // Apply duplicate suppression multiplier
+    const workUnitCounts = this.getWorkUnitCounts(windowEvents);
+    const currentWorkUnitId = event.workUnitId;
     const occurrences = workUnitCounts[currentWorkUnitId] || 0;
     const suppressionMultiplier = this.getSuppressionMultiplier(occurrences);
-
-    // Calculate base sparks
-    const baseSparks = SPARK_FORMULA(tokens, adjustedDistinctWorkUnits);
 
     // Apply suppression
     const suppressedSparks = baseSparks * suppressionMultiplier;
@@ -95,18 +139,21 @@ class SparkEngine {
     // Apply rate limits and diminishing returns
     const finalSparks = this.applyRateLimits(suppressedSparks, event.timestamp);
 
-    // Record event
-    this.recordEvent(event, finalSparks);
+    // Record event with hash
+    this.recordEvent(event, finalSparks, eventHash);
 
     return {
       event,
       sparks: finalSparks,
       totalSparks: this.lifetimeSparks,
+      verificationLevel,
+      verificationLabel: Object.keys(VERIFICATION_LEVELS).find(
+        k => VERIFICATION_LEVELS[k] === verificationLevel
+      ),
       details: {
         tokens,
-        distinctWorkUnits: adjustedDistinctWorkUnits,
-        suppressionMultiplier,
         baseSparks,
+        suppressionMultiplier,
         suppressedSparks
       }
     };
@@ -218,15 +265,18 @@ class SparkEngine {
   }
 
   /**
-   * Record event with spark value
+   * Record event with spark value and hash chain
    */
-  recordEvent(event, sparks) {
+  recordEvent(event, sparks, eventHash) {
     this.events.push({
       id: event.eventId || this.generateId(),
       event: { ...event },
+      hash: eventHash,
+      previousHash: this.lastEventHash,
       sparks,
       timestamp: event.timestamp || Date.now()
     });
+    this.lastEventHash = eventHash;
     this.lifetimeSparks += sparks;
   }
 
@@ -371,6 +421,8 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     SparkEngine,
     SPARK_FORMULA,
+    SPARK_FORMULA_SIMPLE,
+    VERIFICATION_LEVELS,
     RATE_LIMITS,
     DIMINISHING_RATES,
     SUPPRESSION_MULTIPLIERS,

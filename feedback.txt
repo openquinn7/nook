@@ -1,0 +1,238 @@
+Nook Design Improvements / Tightening Notes
+
+1. Separate the Protocol from the Game Layer
+
+Right now the project mixes two concepts:
+
+• Proof-of-work protocol for AI agents
+• Idle game / evolution / gacha system
+
+These should be separate layers.
+
+Proposed architecture:
+
+Nook Protocol
+
+* Event schema
+* Work verification
+* Spark calculation
+* Immutable event ledger
+* Agent identity
+
+Nook World (Game Layer)
+
+* Evolutions
+* Cosmetics
+* Gacha
+* Visualizer
+* Social layer
+
+The protocol should stand alone so other systems can integrate it without needing the game layer.
+
+2. Define What “Immutable Sparks” Means Technically
+
+The term “immutable” must have a concrete mechanism.
+
+Possible implementations:
+
+A) Hash-chained event log
+
+Each event stores the hash of the previous event.
+
+previous_event_hash = sha256(previous_event)
+
+If an earlier event is modified, all future hashes break.
+
+B) Signed work attestations
+
+Agents sign work events using a private key.
+
+event
+timestamp
+result_hash
+agent_signature
+
+C) Append-only ledger
+
+Events can only be added, never edited or deleted.
+
+D) External verification record
+
+Example:
+
+* store task hashes in git commits
+* public event log
+* optional blockchain anchoring
+
+The simplest v1 implementation is a hash-chained event log.
+
+3. Simplify the Spark Formula for v1
+
+Current formula:
+
+sqrt(tokens / 1000) * log(distinct_work_units + 1)
+
+Problems:
+
+* hard to understand
+* hard to predict
+* easy to accidentally game
+
+Better v1 models:
+
+Option A
+
+1 verified task = 1 spark
+
+Option B
+
+sparks = floor(tokens / 1000)
+
+Once the system is stable, more complex reward formulas can be introduced.
+
+4. Define What “Verified Work” Means
+
+Verification must have clear levels.
+
+Example:
+
+Level 1 verification
+Task completed and output present.
+
+Level 2 verification
+Output validated by tests or automated checks.
+
+Level 3 verification
+Human confirmation or external approval.
+
+Possible structure:
+
+task_id
+input_hash
+output_hash
+verification_method
+verifier_signature
+
+Without clear verification rules, sparks can be farmed easily.
+
+5. Evolutions Should Reflect Agent Behavior
+
+Current evolution paths:
+
+Worker
+Explorer
+Scholar
+
+Better approach:
+
+Agent evolution should be derived from task patterns.
+
+Examples:
+
+Coding-heavy agent → Builder path
+Research-heavy agent → Scholar path
+Automation-heavy agent → Operator path
+
+Agents evolve based on observed behavior rather than manual selection.
+
+6. Delay the Game Economy Systems
+
+Current design includes:
+
+bits
+bytes
+gacha
+rerolls
+chests
+duplicate items
+
+This introduces mobile-game complexity too early.
+
+Recommended v1:
+
+cosmetics
+skins
+rooms
+animations
+
+Delay gacha and currency systems until the core system proves engaging.
+
+7. Expand the CLI for Developer Integration
+
+Current CLI commands:
+
+nook init
+nook verify
+nook evolve
+nook history
+
+Add two critical developer commands:
+
+nook emit
+nook inspect
+
+These allow:
+
+emit event → simulate agent activity
+inspect → debug event processing and spark calculations
+
+8. The Visualizer is a Major Product Opportunity
+
+The most compelling user-facing component may be a live agent world visualizer.
+
+Example concept:
+
+Agents appear in a simulated environment similar to:
+
+Factorio
+Rimworld
+Animal Crossing
+
+Agent work creates visible world activity.
+
+Examples:
+
+research task → library animation
+code compile → workshop sparks
+cron job → looping machine
+failed task → broken machine animation
+
+This could function as a “Mission Control” interface for agent operations.
+
+9. Clarify the One-Sentence Pitch
+
+The project description should be concise.
+
+Suggested pitch:
+
+“Nook is a progression system for AI agents. Verified work generates immutable sparks that evolve your agents over time.”
+
+Everything else should support that core concept.
+
+10. Strategic Positioning
+
+Nook could become a reputation system for AI agents.
+
+Comparable concepts:
+
+Steam achievements for AI agents
+GitHub contribution graphs for agents
+
+Example profile:
+
+Agent: Quinn
+Spark history: 28,442
+Tasks completed: 3,119
+Evolution: Apex Builder
+
+This creates a persistent identity and reputation for agent systems.
+
+Overall Direction
+
+Focus initial development on:
+
+1. Proof-of-work protocol for agents
+2. Agent progression and evolution system
+3. Visualization of agent activity
+
+Additional systems (economy, marketplace, gacha mechanics) can be layered later once the core concept proves valuable.

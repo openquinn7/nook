@@ -136,53 +136,323 @@ const STAGE_2_PATHS = {
   }
 };
 
-// Stage 3 sub-branches (chosen at stage 3)
+// Stage 3 sub-branches (chosen at stage 3) - Pokemon/Digimon inspired
 const STAGE_3_SUB_BRANCHES = {
   worker: {
+    // Builder → Architect: Like Machamp→Hariyama→Conkeldurr
     builder: {
-      architect: { name: 'Architect', description: 'Designs and structures solutions', statBonus: { speed: 0.3, luck: 0.1 } },
-      craftsman: { name: 'Craftsman', description: 'Implements with precision', statBonus: { stamina: 0.3, speed: 0.1 } }
+      architect: {
+        name: 'Architect',
+        nameJa: '建築家',
+        description: 'Designs and structures solutions',
+        visual: {
+          color: '#34495e',  // Dark slate
+          accent: '#e67e22',  // Orange
+          shape: 'massive, powerful body with blueprint aura',
+          features: ['master builder badge', 'floating blueprints', 'structural beams'],
+          evolution: 'Builder evolves into a master architect'
+        },
+        emoji: '🏗️',
+        statBonus: { speed: 0.3, luck: 0.1 },
+        traits: ['visionary', 'structural', 'powerful']
+      },
+      // Builder → Craftsman: Like Digimon - MetalGreymon style
+      craftsman: {
+        name: 'Craftsman',
+        nameJa: '工匠',
+        description: 'Implements with precision',
+        visual: {
+          color: '#7f8c8d',  // Metal gray
+          accent: '#f39c12',  // Gold
+          shape: 'armored, metallic body',
+          features: ['precision tools', 'anvil core', 'forge flames'],
+          evolution: 'Builder transforms into a precision craftsman'
+        },
+        emoji: '🔨',
+        statBonus: { stamina: 0.3, speed: 0.1 },
+        traits: ['precise', 'skilled', 'detail-oriented']
+      }
     },
+    // Autonomous → Optimizer: Like Genesect/Palkia
     autonomous: {
-      optimizer: { name: 'Optimizer', description: 'Makes things run better', statBonus: { speed: 0.4 } },
-      autochef: { name: 'AutoChef', description: 'Self-managing systems', statBonus: { stamina: 0.4 } }
+      optimizer: {
+        name: 'Optimizer',
+        nameJa: '最適化',
+        description: 'Makes things run better',
+        visual: {
+          color: '#2c3e50',  // Dark blue
+          accent: '#00b894',  // Green
+          shape: 'streamlined, data-flowing form',
+          features: ['optimization halo', 'speed lines', 'efficiency gauge'],
+          evolution: 'Autonomous evolves into pure efficiency'
+        },
+        emoji: '⚡',
+        statBonus: { speed: 0.4 },
+        traits: ['optimal', 'streamlined', 'relentless']
+      },
+      // Autonomous → Autobot: Like Ultra Magnus
+      autochef: {
+        name: 'AutoChef',
+        nameJa: 'オートシェフ',
+        description: 'Self-managing systems',
+        visual: {
+          color: '#636e72',  // Steel
+          accent: '#fd79a8',  // Pink
+          shape: 'modular, transforming body',
+          features: ['multi-tool arms', 'inventory matrix', 'auto-repair'],
+          evolution: 'Autonomous becomes a self-managing system'
+        },
+        emoji: '🤖',
+        statBonus: { stamina: 0.4 },
+        traits: ['self-sustaining', 'adaptive', 'resourceful']
+      }
     }
   },
   explorer: {
+    // Scout → Navigator: Like Lugia/Articuno - guardian of routes
     scout: {
-      navigator: { name: 'Navigator', description: 'Charts new territories', statBonus: { speed: 0.2, luck: 0.2 } },
-      pathfinder: { name: 'Pathfinder', description: 'Finds optimal routes', statBonus: { luck: 0.3, speed: 0.1 } }
+      navigator: {
+        name: 'Navigator',
+        nameJa: '航海士',
+        description: 'Charts new territories',
+        visual: {
+          color: '#16a085',  // Sea green
+          accent: '#f39c12',  // Gold
+          shape: 'winged, aerodynamic form',
+          features: ['star compass', 'wind surfboard', 'navigation beacon'],
+          evolution: 'Scout evolves into a master navigator'
+        },
+        emoji: '🧭',
+        statBonus: { speed: 0.2, luck: 0.2 },
+        traits: ['guiding', 'aerodynamic', 'weather-readied']
+      },
+      // Scout → Pathfinder: Like Xatu/Togekiss - mystic guide
+      pathfinder: {
+        name: 'Pathfinder',
+        nameJa: '道標',
+        description: 'Finds optimal routes',
+        visual: {
+          color: '#f39c12',  // Gold/yellow
+          accent: '#e74c3c',  // Red
+          shape: 'graceful, ethereal form',
+          features: ['path-light', 'destiny wings', 'route map'],
+          evolution: 'Scout becomes a path-finding oracle'
+        },
+        emoji: '✨',
+        statBonus: { luck: 0.3, speed: 0.1 },
+        traits: ['intuitive', 'clairvoyant', 'guiding']
+      }
     },
+    // Investigator → Tracer: Like Greninja/Mewtwo
     investigator: {
-      tracer: { name: 'Tracer', description: 'Follows trails of data', statBonus: { luck: 0.3, speed: 0.1 } },
-      profiler: { name: 'Profiler', description: 'Builds detailed pictures', statBonus: { stamina: 0.2, luck: 0.2 } }
+      tracer: {
+        name: 'Tracer',
+        nameJa: '追跡者',
+        description: 'Follows trails of data',
+        visual: {
+          color: '#00cec9',  // Cyan
+          accent: '#6c5ce7',  // Purple
+          shape: 'shadow-stealth form',
+          features: ['data tendrils', 'trace markers', 'shadow cloak'],
+          evolution: 'Investigator becomes a data tracer'
+        },
+        emoji: '🌑',
+        statBonus: { luck: 0.3, speed: 0.1 },
+        traits: ['elusive', '追踪', 'mysterious']
+      },
+      // Investigator → Profiler: Like Sinnoh/Detective forms
+      profiler: {
+        name: 'Profiler',
+        nameJa: 'プロファイラー',
+        description: 'Builds detailed pictures',
+        visual: {
+          color: '#0984e3',  // Blue
+          accent: '#d63031',  // Red
+          shape: 'detail-focused, many-eyed form',
+          features: ['analysis visor', 'profile matrix', 'detail scanner'],
+          evolution: 'Investigator evolves into a master profiler'
+        },
+        emoji: '🎯',
+        statBonus: { stamina: 0.2, luck: 0.2 },
+        traits: ['thorough', 'detail-oriented', 'pattern-finding']
+      }
     }
   },
   scholar: {
+    // Analyst → Quant: Like Alakazam/Gengar
     analyst: {
-      quant: { name: 'Quant', description: 'Numerical expert', statBonus: { luck: 0.3, speed: 0.1 } },
-      auditor: { name: 'Auditor', description: 'Thorough examiner', statBonus: { stamina: 0.2, luck: 0.2 } }
+      quant: {
+        name: 'Quant',
+        nameJa: 'クォント',
+        description: 'Numerical expert',
+        visual: {
+          color: '#6c5ce7',  // Purple
+          accent: '#00cec9',  // Cyan
+          shape: 'psychic, floating form',
+          features: ['calculation aura', 'number streams', 'probability crown'],
+          evolution: 'Analyst becomes a quantitative master'
+        },
+        emoji: '🧠',
+        statBonus: { luck: 0.3, speed: 0.1 },
+        traits: ['calculating', 'psychic', 'precise']
+      },
+      // Analyst → Auditor: Like Zapdos/Aegislash
+      auditor: {
+        name: 'Auditor',
+        nameJa: '監査人',
+        description: 'Thorough examiner',
+        visual: {
+          color: '#2d3436',  // Dark
+          accent: '#fdcb6e',  // Gold
+          shape: 'sword/blade form with audit aura',
+          features: ['verification blade', 'audit shield', 'precision scale'],
+          evolution: 'Analyst transforms into a precision auditor'
+        },
+        emoji: '⚖️',
+        statBonus: { stamina: 0.2, luck: 0.2 },
+        traits: ['verifying', 'precise', 'protective']
+      }
     },
+    // Planner → Strategist: Like Giratina/ Arceus
     planner: {
-      strategist: { name: 'Strategist', description: 'Long-term thinker', statBonus: { speed: 0.2, stamina: 0.2 } },
-      coordinator: { name: 'Coordinator', description: 'Orchestrates efforts', statBonus: { luck: 0.2, stamina: 0.2 } }
+      strategist: {
+        name: 'Strategist',
+        nameJa: '戦略家',
+        description: 'Long-term thinker',
+        visual: {
+          color: '#e17055',  // Orange-brown
+          accent: '#d63031',  // Red
+          shape: 'ancient, wise form',
+          features: ['time hourglass', 'strategy board', 'wisdom beard'],
+          evolution: 'Planner evolves into a master strategist'
+        },
+        emoji: '👑',
+        statBonus: { speed: 0.2, stamina: 0.2 },
+        traits: ['wise', 'ancient', 'calculating']
+      },
+      // Planner → Coordinator: Like MariM/Chansey line
+      coordinator: {
+        name: 'Coordinator',
+        nameJa: 'コーディネーター',
+        description: 'Orchestrates efforts',
+        visual: {
+          color: '#fd79a8',  // Pink
+          accent: '#00b894',  // Green
+          shape: 'healing, supportive form',
+          features: ['orchestra cape', 'coordination wand', 'team aura'],
+          evolution: 'Planner becomes a coordination master'
+        },
+        emoji: '🎭',
+        statBonus: { luck: 0.2, stamina: 0.2 },
+        traits: ['orchestrating', 'supportive', 'harmonizing']
+      }
     }
   }
 };
 
-// Stage 4 Apex forms (chosen at stage 4)
+// Stage 4 Apex forms (chosen at stage 4) - Legendary Pokemon/Digimon inspired
 const STAGE_4_APEX_FORMS = {
   worker: {
-    champion: { name: 'Champion', description: 'Master of execution and delivery', emoji: '🏆', statBonus: { speed: 0.5, stamina: 0.5, luck: 0.3 } },
-    legend: { name: 'Legend', description: 'Known for incredible achievements', emoji: '⭐', statBonus: { speed: 0.3, stamina: 0.3, luck: 0.7 } }
+    // Worker Champion: Like Mewtwo/Xerneas - life-giving
+    champion: {
+      name: 'Champion',
+      nameJa: 'チャンピオン',
+      description: 'Master of execution and delivery',
+      visual: {
+        color: '#0984e3',  // Blue
+        accent: '#f1c40f',  // Gold
+        shape: 'majestic, winged battle form',
+        features: ['champion wings', 'execution gauntlets', 'victory aura'],
+        evolution: 'Apex of worker - delivers with divine power'
+      },
+      emoji: '🏆',
+      statBonus: { speed: 0.5, stamina: 0.5, luck: 0.3 },
+      traits: ['victorious', 'powerful', 'delivery-master']
+    },
+    // Worker Legend: Like Arceus - creator of all
+    legend: {
+      name: 'Legend',
+      nameJa: '伝説',
+      description: 'Known for incredible achievements',
+      visual: {
+        color: '#6c5ce7',  // Purple
+        accent: '#00cec9',  // Cyan
+        shape: 'omniscient, infinite form',
+        features: ['creation ring', 'all-type aura', 'legendary mane'],
+        evolution: 'Apex of worker - legendary creator'
+      },
+      emoji: '⭐',
+      statBonus: { speed: 0.3, stamina: 0.3, luck: 0.7 },
+      traits: ['legendary', 'omniscient', 'infinite']
+    }
   },
   explorer: {
-    champion: { name: 'Champion', description: 'Heroic discoverer', emoji: '🏆', statBonus: { speed: 0.5, luck: 0.5, stamina: 0.3 } },
-    legend: { name: 'Legend', description: 'Legendary explorer', emoji: '⭐', statBonus: { luck: 0.7, speed: 0.3, stamina: 0.3 } }
+    // Explorer Champion: Like Lugia - guardian of all routes
+    champion: {
+      name: 'Champion',
+      nameJa: 'チャンピオン',
+      description: 'Heroic discoverer',
+      visual: {
+        color: '#00b894',  // Teal
+        accent: '#f39c12',  // Gold
+        shape: 'guardian, silver wings',
+        features: ['compass of truth', 'guardian crest', 'ocean pearl'],
+        evolution: 'Apex of explorer - guardian of discovery'
+      },
+      emoji: '🏆',
+      statBonus: { speed: 0.5, luck: 0.5, stamina: 0.3 },
+      traits: ['guardian', 'heroic', 'discovery-master']
+    },
+    // Explorer Legend: Like Ho-Oh/Celebi - rainbow bridge
+    legend: {
+      name: 'Legend',
+      nameJa: '伝説',
+      description: 'Legendary explorer',
+      visual: {
+        color: '#e17055',  // Rainbow/orange
+        accent: '#fd79a8',  // Pink
+        shape: 'rainbow, ethereal phoenix form',
+        features: ['rainbow wings', 'time portal', 'legendary flames'],
+        evolution: 'Apex of explorer - legendary bridge between worlds'
+      },
+      emoji: '🌈',
+      statBonus: { luck: 0.7, speed: 0.3, stamina: 0.3 },
+      traits: ['mythical', 'rainbow-bridge', 'time-traveler']
+    }
   },
   scholar: {
-    champion: { name: 'Champion', description: 'Wise champion', emoji: '🏆', statBonus: { stamina: 0.5, luck: 0.5, speed: 0.3 } },
-    legend: { name: 'Legend', description: 'Legendary mind', emoji: '⭐', statBonus: { luck: 0.7, stamina: 0.3, speed: 0.3 } }
+    // Scholar Champion: Like Dialga/Palkia - time/space
+    champion: {
+      name: 'Champion',
+      nameJa: 'チャンピオン',
+      description: 'Wise champion',
+      visual: {
+        color: '#2d3436',  // Dark/time
+        accent: '#0984e3',  // Blue/space
+        shape: 'diamond/clock form',
+        features: ['time dial', 'diamond armor', 'eternal gaze'],
+        evolution: 'Apex of scholar - master of time and space'
+      },
+      emoji: '💎',
+      statBonus: { stamina: 0.5, luck: 0.5, speed: 0.3 },
+      traits: ['timeless', 'wise', 'space-bending']
+    },
+    // Scholar Legend: Like Kyurem/Genesect - infinite knowledge
+    legend: {
+      name: 'Legend',
+      nameJa: '伝説',
+      description: 'Legendary mind',
+      visual: {
+        color: '#74b9ff',  // Ice blue
+        accent: '#a29bfe',  // Light purple
+        shape: 'infinite, fragmented dragon form',
+        features: ['knowledge ice', 'infinite scroll', 'wisdom core'],
+        evolution: 'Apex of scholar - legendary infinite mind'
+      },
+      emoji: '📚',
+      statBonus: { luck: 0.7, stamina: 0.3, speed: 0.3 },
+      traits: ['infinite', 'all-knowing', 'wisdom-keeper']
+    }
   }
 };
 
