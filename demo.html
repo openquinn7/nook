@@ -507,10 +507,10 @@
             <div style={{ backgroundColor: '#0f172a', borderRadius: '16px', padding: '16px', border: '1px solid #334155', position: 'relative', overflow: 'hidden' }}>
               {/* Top Section: Room (left) + Info (right, expanded) */}
               <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-                {/* Left: Bigger Room with moving sprite */}
+                {/* Left: Room with moving sprite */}
                 <div style={{
-                  width: '160px',
-                  height: '140px',
+                  width: '120px',
+                  height: '180px',
                   backgroundColor: '#1e293b',
                   borderRadius: '12px',
                   display: 'flex',
@@ -553,30 +553,47 @@
                   </div>
                 </div>
 
-                {/* Right: Agent Info - expanded with more details */}
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  <div style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff', marginBottom: '6px' }}>Agent Quinn</div>
+                {/* Right: Agent Info - grid layout to use space better */}
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff', marginBottom: '8px' }}>Agent Quinn</div>
 
-                  <div style={{ fontSize: '12px', color: '#7f8c8d', marginBottom: '12px', lineHeight: 1.5 }}>
+                  {/* Status row */}
+                  <div style={{ fontSize: '12px', color: '#7f8c8d', marginBottom: '16px' }}>
                     <span style={{ color: agentStatus === 'working' ? '#f39c12' : '#82E0AA', marginRight: '6px' }}>
                       {agentStatus === 'working' ? '●' : '○'}
                     </span>
                     {agentStatus === 'working' ? 'working' : 'idle'}
+                    <span style={{ margin: '0 8px', color: '#4a5568' }}>|</span>
+                    Active since Jan 2026
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '36px', fontWeight: 'bold', color: '#f39c12', lineHeight: 1 }}>
-                      ⚡ {sparks.toLocaleString()}
-                    </span>
-                    <span style={{ fontSize: '12px', color: '#7f8c8d' }}>sparks</span>
-                  </div>
-                  <div style={{ fontSize: '13px', color: '#82E0AA', fontWeight: 'bold' }}>
-                    +18 today
+                  {/* Stats grid */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+                    <div style={{ backgroundColor: '#1e293b', borderRadius: '8px', padding: '12px' }}>
+                      <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#f39c12', lineHeight: 1 }}>{sparks.toLocaleString()}</div>
+                      <div style={{ fontSize: '10px', color: '#7f8c8d', textTransform: 'uppercase', letterSpacing: '1px' }}>Total Sparks</div>
+                    </div>
+                    <div style={{ backgroundColor: '#1e293b', borderRadius: '8px', padding: '12px' }}>
+                      <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#82E0AA', lineHeight: 1 }}>+18</div>
+                      <div style={{ fontSize: '10px', color: '#7f8c8d', textTransform: 'uppercase', letterSpacing: '1px' }}>Today</div>
+                    </div>
+                    <div style={{ backgroundColor: '#1e293b', borderRadius: '8px', padding: '12px' }}>
+                      <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#AED6F1', lineHeight: 1 }}>47</div>
+                      <div style={{ fontSize: '10px', color: '#7f8c8d', textTransform: 'uppercase', letterSpacing: '1px' }}>Tasks</div>
+                    </div>
+                    <div style={{ backgroundColor: '#1e293b', borderRadius: '8px', padding: '12px' }}>
+                      <div style={{ fontSize: '28px', fontWeight: 'bold', color: '#E74C3C', lineHeight: 1 }}>7</div>
+                      <div style={{ fontSize: '10px', color: '#7f8c8d', textTransform: 'uppercase', letterSpacing: '1px' }}>Day Streak</div>
+                    </div>
                   </div>
 
-                  <div style={{ fontSize: '11px', color: '#64748b', borderTop: '1px solid #334155', paddingTop: '10px' }}>
-                    <div style={{ marginBottom: '4px' }}>Active since Jan 2026</div>
-                    <div>Evolution: Stage 2 - Builder</div>
+                  {/* Evolution */}
+                  <div style={{ backgroundColor: '#1e293b', borderRadius: '8px', padding: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Sprite variant="worker" state="idle" size={24} />
+                    <div>
+                      <div style={{ fontSize: '12px', color: '#fff', fontWeight: 'bold' }}>Stage 2 - Builder</div>
+                      <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Next: 498 sparks to Bloom</div>
+                    </div>
                   </div>
                 </div>
               </div>
