@@ -192,19 +192,21 @@ class NookWorld {
     const currentStage = this.sprite.stage;
 
     if (currentStage === 1) {
+      this.sprite.stage++; // Increment first
       this.sprite.choosePath(choice);
       this.achievementSystem.trackEvent('agent.evolution', { stage: 2 });
     } else if (currentStage === 2) {
+      this.sprite.stage++; // Increment first
       this.sprite.chooseSubBranch(choice);
       this.achievementSystem.trackEvent('agent.evolution', { stage: 3 });
     } else if (currentStage === 3) {
+      this.sprite.stage++; // Increment first
       this.sprite.chooseApexForm(choice);
       this.achievementSystem.trackEvent('agent.evolution', { stage: 4 });
     } else {
       throw new Error('Already at max stage');
     }
 
-    this.sprite.stage++;
     this.saveProfile();
 
     return {
