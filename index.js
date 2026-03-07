@@ -29,6 +29,11 @@ class NookProtocol {
     // Sprite (created on init)
     this.sprite = null;
 
+    // Event hooks for external agents
+    this.hooks = {
+      '*': [],  // Wildcard - fires for all events
+    };
+
     // Load or create profile
     this.profile = this.loadProfile();
     if (this.profile) {
@@ -161,7 +166,59 @@ class NookProtocol {
     // Save progress
     this.saveProfile();
 
+    // Fire hooks
+    this._fireHooks(event, result);
+
     return result;
+  }
+
+  /**
+   * Register a callback for events
+   * @param {string} eventType - Event type to listen to, or '*' for all
+   * @param {function} callback - Function to call: (event, result) => {}
+   */
+  on(eventType, callback) {
+    if (!this.hooks[eventType]) {
+      this.hooks[eventType] = [];
+    }
+    this.hooks[eventType].push(callback);
+    return () => this.off(eventType, callback); // Return unsubscribe function
+  }
+
+  /**
+   * Unregister a callback
+   */
+  off(eventType, callback) {
+    if (this.hooks[eventType]) {
+      this.hooks[eventType] = this.hooks[eventType].filter(cb => cb !== callback);
+    }
+  }
+
+  /**
+   * Fire registered hooks
+   */
+  _fireHooks(event, result) {
+    // Fire wildcard hooks
+    if (this.hooks['*']) {
+      for (const cb of this.hooks['*']) {
+        try {
+          cb(event, result);
+        } catch (e) {
+          console.error('Hook error:', e.message);
+        }
+      }
+    }
+
+    // Fire specific hooks
+    if (this.hooks[event.type]) {
+      for (const cb of this.hooks[event.type]) {
+        try {
+          cb(event, result);
+        } catch (e) {
+          console.error('Hook error:', e.message);
+        }
+      }
+    }
   }
 
   /**

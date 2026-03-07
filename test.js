@@ -24,10 +24,14 @@ console.log(`✅ ${initResult.message}\n`);
 console.log('Test 3: Emit events');
 for (let i = 0; i < 10; i++) {
   const result = nook.emit({
+    eventId: `evt-${Date.now()}-${i}`,
+    eventVersion: '1.0',
     type: 'agent.completed',
     workUnitId: `task-${Date.now()}-${i}`,
     tokens: 50000 + (i * 5000),
-    success: true
+    success: true,
+    agentId: nook.agentId,
+    rootIdentityId: nook.rootIdentity
   });
   console.log(`  Task ${i}: +${result.sparks} sparks (total: ${result.totalSparks})`);
 }

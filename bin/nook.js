@@ -134,10 +134,14 @@ async function handleEmit(nook, args) {
   console.log(chalk.gray(`Emitting event: completed ${workUnitId} with ${tokens} tokens`));
 
   const result = nook.emit({
+    eventId: `evt-${Date.now()}`,
+    eventVersion: '1.0',
     type: 'agent.completed',
     workUnitId,
     tokens,
-    success: true
+    success: true,
+    agentId: nook.agentId,
+    rootIdentityId: nook.rootIdentity
   });
 
   console.log(chalk.green(`\n✅ Earned ${result.sparks} sparks!`));

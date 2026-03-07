@@ -45,6 +45,27 @@ nook.emit({
 
 ---
 
+## Hook System
+
+Subscribe to events using the `on()` method:
+
+```typescript
+// Subscribe to specific event
+const unsubscribe = nook.on('agent.completed', (event, result) => {
+  console.log('Task completed!', result.sparks, 'sparks earned');
+});
+
+// Subscribe to all events (wildcard)
+nook.on('*', (event, result) => {
+  console.log('Event:', event.type);
+});
+
+// Unsubscribe
+unsubscribe();
+```
+
+---
+
 ## Event Types
 
 | Event | When to Emit |
@@ -161,6 +182,73 @@ class MyAgent {
     }
   }
 }
+```
+
+---
+
+## Agent Adapters
+
+Pre-built wrappers for common agent frameworks that automatically track tasks and emit events.
+
+### Generic Adapter
+
+```typescript
+const { AgentAdapter } = require('@nook/protocol/adapters/generic');
+
+const adapter = new AgentAdapter({
+  agentId: 'my-agent',
+  rootIdentity: 'user-123'
+});
+
+// Wrap any async function to track it as a task
+const trackedTask = adapter.wrapTask(async () => {
+  // Do work...
+  return result;
+}, { workUnitId: 'task-123' });
+
+// Execute the tracked task
+const result = await trackedTask();
+
+// Use hooks for callbacks
+adapter.createHooks({
+  onTaskStart: (event) => console.log('Started:', event.workUnitId),
+  onTaskComplete: (event, result) => console.log('Earned:', result.sparks),
+  onTaskFail: (event) => console.log('Failed:', event.error)
+});
+```
+
+### Claude Code Adapter
+
+```typescript
+const { ClaudeCodeAdapter } = require('@nook/protocol/adapters/claude-code');
+
+const adapter = new ClaudeCodeAdapter({
+  agentId: 'claude-code',
+  rootIdentity: process.env.USER
+});
+
+// Wrap Claude Code task function
+const wrappedTask = adapter.wrapTask(async (task, context) => {
+  // Execute the task
+  return result;
+});
+
+// Register callbacks
+adapter.onComplete((event, result) => {
+  console.log('Earned sparks:', result.sparks);
+});
+
+adapter.onStart((event) => {
+  console.log('Started:', event.workUnitId);
+});
+
+adapter.onFail((event) => {
+  console.log('Failed:', event.error);
+});
+
+// Get current status
+const status = adapter.getStatus();
+const balance = adapter.getBalance();
 ```
 
 ---
