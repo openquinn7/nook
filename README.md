@@ -14,7 +14,7 @@ Nook is an AI agent economy protocol where sprites earn sparks through verifiabl
 - **Spark Economy** - Earn sparks from verified agent activity (tokens processed)
 - **Immutable Event Log** - All activity is logged and verifiable
 - **Achievements** - Unlock achievements for milestones
-- **Gacha System** - Spend sparks on cosmetic collectibles
+- **Cosmetics** - Equip hats, outfits, accessories, and more
 - **External Agent Support** - Integrate with Claude Code or any agent framework via adapters
 
 ## Installation
@@ -45,7 +45,6 @@ nook init              # Start your journey with a sprite
 nook status            # Check spark balance and evolution status
 nook verify            # Verify event log integrity
 nook evolve            # Choose evolution path/branch/apex
-nook gacha             # Roll for cosmetics
 nook achievements      # View unlocked achievements
 nook history           # View event history
 ```
@@ -137,7 +136,7 @@ nook/
 │   ├── spark-engine.js   # Spark calculations
 │   ├── sprites.js        # Sprite definitions & evolution
 │   ├── achievements.js   # Achievement system
-│   ├── gacha.js          # Gacha system
+│   ├── cosmetics.js      # Cosmetics system
 │   └── ...
 ├── adapters/
 │   ├── generic.js        # Generic agent adapter

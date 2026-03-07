@@ -38,11 +38,6 @@ async function main() {
       await handleEvolve(nook, args.slice(1));
       break;
 
-    case 'gacha':
-    case 'roll':
-      await handleGacha(nook);
-      break;
-
     case 'achievements':
       await handleAchievements(nook);
       break;
@@ -206,58 +201,6 @@ async function handleEvolve(nook, args) {
   showStatus(nook.getStatus());
 }
 
-async function handleGacha(nook) {
-  const status = nook.getStatus();
-
-  if (!status.initialized) {
-    console.log(chalk.yellow('No sprite found. Run "nook init" first!'));
-    return;
-  }
-
-  const { type } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'type',
-      message: 'Choose gacha type:',
-      choices: [
-        { name: 'Single Roll (100 sparks)', value: 'SINGLE' },
-        { name: 'Multi Roll (900 sparks, 10% off)', value: 'MULTI' },
-        { name: 'Guaranteed Epic (500 sparks)', value: 'GUARANTEED' }
-      ]
-    }
-  ]);
-
-  if (status.sparks < 100 && type !== 'GUARANTEED') {
-    console.log(chalk.yellow('Not enough sparks!'));
-    return;
-  }
-
-  const spinner = ora('Rolling...').start();
-  await new Promise(r => setTimeout(r, 1000));
-
-  const result = nook.rollGacha(type, 'sparks');
-  spinner.stop();
-
-  console.log(chalk.bold.cyan('\n🎉 Results:\n'));
-
-  for (const item of result.results) {
-    const tierEmoji = {
-      common: '⚪',
-      uncommon: '🟢',
-      rare: '🔵',
-      epic: '🟣',
-      legendary: '🟡'
-    }[item.tier];
-
-    console.log(chalk`${tierEmoji} {bold ${item.cosmetic.name}} (${item.tier})`);
-    if (item.isNew) {
-      console.log(chalk.green('  ✨ NEW!'));
-    }
-  }
-
-  console.log(chalk.gray(`\nRemaining sparks: ${result.remainingBalance}`));
-}
-
 async function handleAchievements(nook) {
   const achievements = nook.getAchievements().getUnlockedAchievements();
 
@@ -374,7 +317,6 @@ Commands:
   init, start     Initialize a new sprite
   status, info     Show sprite status
   evolve           Choose evolution path/branch/apex
-  gacha, roll      Roll gacha for cosmetics
   achievements     Show unlocked achievements
   history, events  Show event history and spark accumulation
   verify           Verify event log integrity

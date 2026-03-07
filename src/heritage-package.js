@@ -14,26 +14,18 @@ const HERITAGE_TIERS = [
 
 const HERITAGE_REWARDS = {
   Seed: {
-    gachaChests: 1,
-    chestTier: 1,
     cosmeticBadge: 'heritage_seed',
     progressionBonus: 0
   },
   Sprout: {
-    gachaChests: 2,
-    chestTier: 1,
     cosmeticBadge: 'heritage_sprout',
     progressionBonus: 100
   },
   Bloom: {
-    gachaChests: 3,
-    chestTier: 2,
     cosmeticBadge: 'heritage_bloom',
     progressionBonus: 250
   },
   Apex: {
-    gachaChests: 5,
-    chestTier: 3,
     cosmeticBadge: 'heritage_apex',
     progressionBonus: 500
   }
@@ -137,8 +129,6 @@ class HeritagePackage {
       agentId,
       package: pkg,
       rewards: {
-        chests: pkg.rewards.gachaChests,
-        chestTier: pkg.rewards.chestTier,
         cosmetic: pkg.cosmetic,
         progressionBonus: pkg.rewards.progressionBonus
       }

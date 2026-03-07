@@ -51,14 +51,8 @@ const achievements = nook.getAchievements();
 achievements.trackEvent('agent.tokens', { tokens: 1500 });
 console.log(`  Unlocked: ${achievements.getUnlockedAchievements().length}\n`);
 
-// Test 6: Gacha
-console.log('Test 6: Gacha roll');
-const gachaResult = nook.rollGacha('SINGLE', 'sparks', 100);
-console.log(`  Got: ${gachaResult.results[0].cosmetic.name} (${gachaResult.results[0].tier})`);
-console.log(`  Remaining: ${gachaResult.remainingBalance}\n`);
-
-// Test 7: Persistence
-console.log('Test 7: Persistence');
+// Test 6: Persistence
+console.log('Test 6: Persistence');
 const profilePath = nook.getProfilePath();
 console.log(`  Profile saved to: ${profilePath}`);
 
