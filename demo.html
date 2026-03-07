@@ -119,6 +119,40 @@
       4: { sparks: 10000, name: 'Apex' }
     };
 
+    // Stage 3 sub-branches (chosen at Bloom evolution)
+    const STAGE_3_SUB_BRANCHES = {
+      worker: {
+        builder: {
+          architect: { name: 'Architect', description: 'Designs & structures solutions', statBonus: 'Speed +30%, Luck +10%' },
+          craftsman: { name: 'Craftsman', description: 'Implements with precision', statBonus: 'Stamina +30%, Speed +10%' }
+        },
+        autonomous: {
+          optimizer: { name: 'Optimizer', description: 'Makes things run better', statBonus: 'Speed +40%' },
+          autochef: { name: 'AutoChef', description: 'Self-managing systems', statBonus: 'Stamina +40%' }
+        }
+      },
+      explorer: {
+        scout: {
+          navigator: { name: 'Navigator', description: 'Charts new territories', statBonus: 'Speed +20%, Luck +20%' },
+          pathfinder: { name: 'Pathfinder', description: 'Finds optimal routes', statBonus: 'Luck +30%, Speed +10%' }
+        },
+        investigator: {
+          tracer: { name: 'Tracer', description: 'Follows trails of data', statBonus: 'Luck +30%, Speed +10%' },
+          profiler: { name: 'Profiler', description: 'Builds detailed pictures', statBonus: 'Stamina +20%, Luck +20%' }
+        }
+      },
+      scholar: {
+        analyst: {
+          quant: { name: 'Quant', description: 'Numerical expert', statBonus: 'Luck +30%, Speed +10%' },
+          auditor: { name: 'Auditor', description: 'Thorough examiner', statBonus: 'Stamina +20%, Luck +20%' }
+        },
+        planner: {
+          strategist: { name: 'Strategist', description: 'Long-term thinker', statBonus: 'Speed +20%, Stamina +20%' },
+          coordinator: { name: 'Coordinator', description: 'Orchestrates efforts', statBonus: 'Luck +20%, Stamina +20%' }
+        }
+      }
+    };
+
     const SPRITE_STATES = ['idle', 'working', 'success', 'failure', 'sleeping'];
 
     // SVG Sprite component
@@ -604,6 +638,107 @@
                 </React.Fragment>
               ))}
             </div>
+          </div>
+
+          {/* Evolution 3 Mockup - Bloom Stage */}
+          <div style={{ marginBottom: '30px', backgroundColor: '#16213e', borderRadius: '12px', padding: '24px' }}>
+            <h2 style={{ fontSize: '16px', color: '#E74C3C', marginBottom: '8px', textAlign: 'center' }}>🌸 Evolution 3: Bloom Stage</h2>
+            <p style={{ fontSize: '12px', color: '#7f8c8d', textAlign: 'center', marginBottom: '20px' }}>At 2,500 sparks, your Sprout blooms and chooses a sub-branch</p>
+
+            {/* Current progress */}
+            <div style={{ backgroundColor: '#0f172a', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span style={{ color: '#7f8c8d' }}>Current Sparks</span>
+                <span style={{ color: '#f39c12' }}>⚡ 2,487 / 2,500</span>
+              </div>
+              <div style={{ height: '8px', backgroundColor: '#1a1a2e', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: '99%', height: '100%', background: 'linear-gradient(90deg, #e74c3c, #f39c12)', borderRadius: '4px' }} />
+              </div>
+              <p style={{ fontSize: '10px', color: '#7f8c8d', marginTop: '8px', textAlign: 'center' }}>13 sparks until Bloom evolution!</p>
+            </div>
+
+            {/* Current path context */}
+            <div style={{ backgroundColor: '#0f172a', borderRadius: '8px', padding: '16px', marginBottom: '24px', textAlign: 'center' }}>
+              <div style={{ fontSize: '12px', color: '#7f8c8d', marginBottom: '8px' }}>Current Evolution Path</div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Sprite variant="worker" state="idle" size={32} />
+                  <span style={{ color: '#F4D03F' }}>Worker</span>
+                </div>
+                <span style={{ color: '#7f8c8d' }}>→</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ color: '#82E0AA' }}>Builder</span>
+                  <span style={{ fontSize: '16px' }}>→</span>
+                </div>
+                <div style={{ backgroundColor: '#1a1a2e', padding: '4px 12px', borderRadius: '4px' }}>
+                  <span style={{ color: '#f39c12', fontWeight: 'bold' }}>Choose Sub-Branch</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Sub-branch choices for each path */}
+            {Object.entries(STAGE_3_SUB_BRANCHES.worker).map(([pathKey, branches]) => (
+              <div key={pathKey} style={{ marginBottom: '20px' }}>
+                <div style={{ fontSize: '11px', color: '#7f8c8d', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                  After {STAGE_2_PATHS.worker[pathKey]?.name || pathKey}
+                </div>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  {Object.entries(branches).map(([branchKey, branchData]) => (
+                    <div
+                      key={branchKey}
+                      style={{
+                        backgroundColor: '#1a1a2e',
+                        borderRadius: '8px',
+                        padding: '12px',
+                        flex: '1 1 160px',
+                        maxWidth: '200px',
+                        border: '2px solid #f39c12',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      <div style={{ fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>{branchData.name}</div>
+                      <div style={{ fontSize: '10px', color: '#7f8c8d', marginBottom: '8px' }}>{branchData.description}</div>
+                      <div style={{ fontSize: '10px', color: '#E74C3C', backgroundColor: 'rgba(231, 76, 60, 0.1)', padding: '4px 8px', borderRadius: '4px', display: 'inline-block' }}>
+                        {branchData.statBonus}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {/* Show other variants' paths too */}
+            {Object.entries(STAGE_3_SUB_BRANCHES).filter(([v]) => v !== 'worker').map(([variant, paths]) => (
+              <div key={variant} style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid #333' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                  <Sprite variant={variant} state="idle" size={28} />
+                  <span style={{ color: SEED_VARIANTS[variant].color, fontWeight: 'bold' }}>{SEED_VARIANTS[variant].name}</span>
+                </div>
+                {Object.entries(paths).map(([pathKey, branches]) => (
+                  <div key={pathKey} style={{ marginBottom: '12px', marginLeft: '36px' }}>
+                    <div style={{ fontSize: '10px', color: '#7f8c8d', marginBottom: '4px' }}>{STAGE_2_PATHS[variant]?.[pathKey]?.name || pathKey} →</div>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      {Object.entries(branches).map(([branchKey, branchData]) => (
+                        <div
+                          key={branchKey}
+                          style={{
+                            backgroundColor: '#1a1a2e',
+                            borderRadius: '6px',
+                            padding: '8px',
+                            flex: '1 1 140px',
+                            maxWidth: '180px'
+                          }}
+                        >
+                          <div style={{ fontWeight: 'bold', color: '#fff', fontSize: '11px' }}>{branchData.name}</div>
+                          <div style={{ fontSize: '9px', color: '#E74C3C' }}>{branchData.statBonus}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
 
           {/* Onboarding Modal */}
