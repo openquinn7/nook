@@ -503,33 +503,34 @@
           </div>
 
           {/* Agent Dashboard - Room Style */}
-          <div style={{ marginBottom: '30px', maxWidth: '500px', margin: '0 auto 30px' }}>
-            <div style={{ backgroundColor: '#0f172a', borderRadius: '16px', padding: '20px', border: '1px solid #334155', position: 'relative', overflow: 'hidden' }}>
-              {/* Top Section: Room (left) + Info (right) */}
-              <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-                {/* Left: Sprite Room */}
+          <div style={{ marginBottom: '30px', maxWidth: '480px', margin: '0 auto 30px' }}>
+            <div style={{ backgroundColor: '#0f172a', borderRadius: '16px', padding: '16px', border: '1px solid #334155', position: 'relative', overflow: 'hidden' }}>
+              {/* Top Section: Room (left) + Info (right, stacked) */}
+              <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+                {/* Left: Sprite Room - bigger */}
                 <div style={{
-                  width: '100px',
-                  height: '100px',
+                  width: '120px',
+                  height: '120px',
                   backgroundColor: '#1e293b',
                   borderRadius: '12px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   position: 'relative',
-                  border: '2px solid #334155'
+                  border: '2px solid #334155',
+                  flexShrink: 0
                 }}>
                   {/* Room floor */}
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30px', background: 'linear-gradient(to top, #1e293b, #334155)', borderRadius: '0 0 10px 10px' }} />
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '35px', background: 'linear-gradient(to top, #1e293b, #334155)', borderRadius: '0 0 10px 10px' }} />
                   <div style={{ position: 'relative', zIndex: 1 }}>
-                    <Sprite variant="worker" state="idle" size={56} />
+                    <Sprite variant="worker" state="idle" size={72} />
                     {showSparkFloat && (
                       <div style={{
                         position: 'absolute',
                         top: '-5px',
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        fontSize: '14px',
+                        fontSize: '16px',
                         fontWeight: 'bold',
                         color: '#f39c12',
                         animation: 'spark-float 1.5s ease-out forwards',
@@ -542,22 +543,22 @@
                   </div>
                 </div>
 
-                {/* Right: Agent Info */}
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>Agent Quinn</div>
-                  <div style={{ fontSize: '11px', color: '#7f8c8d', marginBottom: '12px' }}>
-                    <span style={{ color: agentStatus === 'working' ? '#f39c12' : '#82E0AA', marginRight: '6px' }}>
+                {/* Right: Agent Info - stacked compact */}
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', paddingTop: '4px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                    <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>Agent Quinn</div>
+                  </div>
+                  <div style={{ fontSize: '10px', color: '#7f8c8d', marginBottom: '8px' }}>
+                    <span style={{ color: agentStatus === 'working' ? '#f39c12' : '#82E0AA' }}>
                       {agentStatus === 'working' ? '●' : '○'}
                     </span>
-                    {agentStatus === 'working' ? 'working' : 'idle'}
-                    <span style={{ margin: '0 6px', color: '#4a5568' }}>•</span>
-                    Active since Jan 2026
+                    {' '}{agentStatus === 'working' ? 'working' : 'idle'} • Active since Jan 2026
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                    <span style={{ fontSize: '32px', fontWeight: 'bold', color: '#f39c12', lineHeight: 1, textShadow: '0 0 20px rgba(243, 156, 18, 0.4)' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '28px', fontWeight: 'bold', color: '#f39c12', lineHeight: 1 }}>
                       ⚡ {sparks.toLocaleString()}
                     </span>
-                    <span style={{ fontSize: '11px', color: '#7f8c8d', textTransform: 'uppercase', letterSpacing: '1px' }}>sparks</span>
+                    <span style={{ fontSize: '10px', color: '#7f8c8d' }}>sparks</span>
                   </div>
                 </div>
               </div>
@@ -566,7 +567,7 @@
               <div style={{ borderTop: '1px solid #334155', paddingTop: '12px' }}>
                 <div style={{ fontSize: '10px', color: '#7f8c8d', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Recent Activity</div>
                 {activity.map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '5px 0', fontSize: '11px', borderBottom: i < activity.length - 1 ? '1px solid #1e293b' : 'none' }}>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '4px 0', fontSize: '11px', borderBottom: i < activity.length - 1 ? '1px solid #1e293b' : 'none' }}>
                     <span style={{ color: '#f39c12', fontWeight: 'bold', minWidth: '35px' }}>⚡ {item.sparks}</span>
                     <span style={{ color: '#e2e8f0', flex: 1 }}>{item.task}</span>
                     <span style={{ color: '#64748b', fontSize: '10px' }}>{item.time}</span>
