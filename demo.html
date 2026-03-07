@@ -153,6 +153,22 @@
       }
     };
 
+    // Stage 4 Apex forms (chosen at Apex evolution)
+    const STAGE_4_APEX_FORMS = {
+      worker: {
+        champion: { name: 'Champion', description: 'Master of execution & delivery', emoji: '🏆', statBonus: 'Speed +50%, Stamina +50%, Luck +30%' },
+        legend: { name: 'Legend', description: 'Known for incredible achievements', emoji: '⭐', statBonus: 'Speed +30%, Stamina +30%, Luck +70%' }
+      },
+      explorer: {
+        champion: { name: 'Champion', description: 'Heroic discoverer', emoji: '🏆', statBonus: 'Speed +50%, Luck +50%, Stamina +30%' },
+        legend: { name: 'Legend', description: 'Legendary explorer', emoji: '⭐', statBonus: 'Luck +70%, Speed +30%, Stamina +30%' }
+      },
+      scholar: {
+        champion: { name: 'Champion', description: 'Wise champion', emoji: '🏆', statBonus: 'Stamina +50%, Luck +50%, Speed +30%' },
+        legend: { name: 'Legend', description: 'Legendary mind', emoji: '⭐', statBonus: 'Luck +70%, Stamina +30%, Speed +30%' }
+      }
+    };
+
     const SPRITE_STATES = ['idle', 'working', 'success', 'failure', 'sleeping'];
 
     // SVG Sprite component
@@ -739,6 +755,132 @@
                 ))}
               </div>
             ))}
+          </div>
+
+          {/* Evolution 4 Mockup - Apex Stage */}
+          <div style={{ marginBottom: '30px', backgroundColor: '#16213e', borderRadius: '12px', padding: '24px' }}>
+            <h2 style={{ fontSize: '16px', color: '#9B59B6', marginBottom: '8px', textAlign: 'center' }}>⭐ Evolution 4: Apex Stage</h2>
+            <p style={{ fontSize: '12px', color: '#7f8c8d', textAlign: 'center', marginBottom: '20px' }}>At 10,000 sparks, your Bloom reaches Apex form - the ultimate evolution!</p>
+
+            {/* Current progress */}
+            <div style={{ backgroundColor: '#0f172a', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span style={{ color: '#7f8c8d' }}>Current Sparks</span>
+                <span style={{ color: '#f39c12' }}>⚡ 9,876 / 10,000</span>
+              </div>
+              <div style={{ height: '8px', backgroundColor: '#1a1a2e', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: '98%', height: '100%', background: 'linear-gradient(90deg, #9B59B6, #E74C3C)', borderRadius: '4px' }} />
+              </div>
+              <p style={{ fontSize: '10px', color: '#7f8c8d', marginTop: '8px', textAlign: 'center' }}>124 sparks until Apex evolution!</p>
+            </div>
+
+            {/* Full evolution path */}
+            <div style={{ backgroundColor: '#0f172a', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
+              <div style={{ fontSize: '12px', color: '#7f8c8d', marginBottom: '12px', textAlign: 'center' }}>Your Evolution Journey</div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', flexWrap: 'wrap' }}>
+                {[
+                  { stage: 'Seed', variant: 'seed', path: null },
+                  { stage: 'Sprout', variant: 'worker', path: 'Builder' },
+                  { stage: 'Bloom', variant: 'worker', path: 'Architect' },
+                  { stage: 'Apex', variant: 'worker', path: '?', highlight: true }
+                ].map((s, i, arr) => (
+                  <React.Fragment key={s.stage}>
+                    <div style={{
+                      textAlign: 'center',
+                      padding: '8px',
+                      backgroundColor: s.highlight ? 'rgba(155, 89, 182, 0.2)' : 'transparent',
+                      borderRadius: '8px'
+                    }}>
+                      <Sprite variant={s.variant} state={s.highlight ? 'success' : 'idle'} size={36} />
+                      <div style={{ fontSize: '9px', color: s.highlight ? '#9B59B6' : '#fff', marginTop: '4px' }}>{s.stage}</div>
+                      {s.path && <div style={{ fontSize: '8px', color: '#7f8c8d' }}>{s.path}</div>}
+                    </div>
+                    {i < arr.length - 1 && (
+                      <span style={{ color: '#7f8c8d', fontSize: '14px', margin: '0 4px' }}>→</span>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+
+            {/* Apex form choices */}
+            <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {Object.entries(STAGE_4_APEX_FORMS).map(([variant, forms]) => (
+                <div key={variant} style={{ flex: '1 1 280px', maxWidth: '320px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <Sprite variant={variant} state="idle" size={32} />
+                    <span style={{ color: SEED_VARIANTS[variant].color, fontWeight: 'bold', fontSize: '14px' }}>
+                      {SEED_VARIANTS[variant].name} Apex Forms
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    {Object.entries(forms).map(([formKey, formData]) => (
+                      <div
+                        key={formKey}
+                        style={{
+                          backgroundColor: '#1a1a2e',
+                          borderRadius: '12px',
+                          padding: '16px',
+                          flex: '1',
+                          border: '2px solid #9B59B6',
+                          textAlign: 'center',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s'
+                        }}
+                      >
+                        <div style={{ fontSize: '32px', marginBottom: '8px' }}>{formData.emoji}</div>
+                        <div style={{ fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>{formData.name}</div>
+                        <div style={{ fontSize: '10px', color: '#7f8c8d', marginBottom: '12px' }}>{formData.description}</div>
+                        <div style={{ fontSize: '10px', color: '#9B59B6', backgroundColor: 'rgba(155, 89, 182, 0.1)', padding: '6px 10px', borderRadius: '4px' }}>
+                          {formData.statBonus}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Stats summary */}
+            <div style={{ marginTop: '24px', textAlign: 'center' }}>
+              <div style={{ fontSize: '11px', color: '#7f8c8d', marginBottom: '12px' }}>Total Stats at Apex (Legend)</div>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '24px' }}>
+                {[
+                  { label: 'Speed', value: '90%', color: '#3498db' },
+                  { label: 'Stamina', value: '90%', color: '#e67e22' },
+                  { label: 'Luck', value: '130%', color: '#f39c12' }
+                ].map(stat => (
+                  <div key={stat.label} style={{ textAlign: 'center' }}>
+                    <div style={{
+                      width: '60px',
+                      height: '60px',
+                      borderRadius: '50%',
+                      background: `conic-gradient(${stat.color} ${parseInt(stat.value) * 2.76}deg, #1a1a2e 0deg)`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: '0 auto 4px'
+                    }}>
+                      <div style={{
+                        width: '48px',
+                        height: '48px',
+                        borderRadius: '50%',
+                        backgroundColor: '#0f172a',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        color: stat.color
+                      }}>
+                        {stat.value}
+                      </div>
+                    </div>
+                    <div style={{ fontSize: '10px', color: '#7f8c8d' }}>{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Onboarding Modal */}
