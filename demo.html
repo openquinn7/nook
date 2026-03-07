@@ -441,6 +441,37 @@
             <p style={{ color: '#7f8c8d', fontSize: '14px' }}>Interactive Sprite Visualization</p>
           </div>
 
+          {/* Agent Dashboard */}
+          <div style={{ marginBottom: '30px', backgroundColor: '#0f172a', borderRadius: '12px', padding: '20px', border: '1px solid #334155' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+              <Sprite variant="worker" state="idle" size={48} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>Agent: Quinn</div>
+                <div style={{ fontSize: '12px', color: '#7f8c8d' }}>Status: <span style={{ color: '#82E0AA' }}>●</span> researching</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#f39c12' }}>⚡ 1,482</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>sparks</div>
+              </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid #334155', paddingTop: '12px' }}>
+              <div style={{ fontSize: '11px', color: '#7f8c8d', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Recent Activity</div>
+              {[
+                { sparks: '+3', task: 'research job', time: '2m ago', color: '#82E0AA' },
+                { sparks: '+1', task: 'data fetch', time: '5m ago', color: '#82E0AA' },
+                { sparks: '+2', task: 'analysis', time: '12m ago', color: '#82E0AA' },
+                { sparks: '+1', task: 'code review', time: '18m ago', color: '#82E0AA' }
+              ].map((activity, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 0', fontSize: '12px' }}>
+                  <span style={{ color: activity.color, fontWeight: 'bold', minWidth: '30px' }}>{activity.sparks}</span>
+                  <span style={{ color: '#fff', flex: 1 }}>{activity.task}</span>
+                  <span style={{ color: '#7f8c8d' }}>{activity.time}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Onboarding Demo */}
           <div style={{ marginBottom: '30px', textAlign: 'center' }}>
             <h2 style={{ fontSize: '16px', color: '#f39c12', marginBottom: '16px' }}>🎮 Try Onboarding</h2>
