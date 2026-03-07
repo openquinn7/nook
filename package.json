@@ -1,0 +1,35 @@
+{
+  "name": "@nook/protocol",
+  "version": "1.0.0",
+  "description": "Nook - AI agent economy protocol where sprites earn sparks through work",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "nook": "./bin/nook.js"
+  },
+  "scripts": {
+    "build": "node build.js",
+    "test": "node test.js",
+    "start": "node bin/nook.js"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "economy",
+    "gamification",
+    "sparks",
+    "sprite",
+    "evolution"
+  ],
+  "author": "Quinn",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.5",
+    "ora": "^5.4.1"
+  }
+}
