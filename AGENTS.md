@@ -69,3 +69,16 @@ You wake up fresh each session. These files are your continuity:
 - Report to Quinn (BUILD domain overseer) at sync times
 - Post updates to #build channel
 - Tag Carlton only when human attention needed
+
+## Domain Sync
+
+When completing work on this project:
+
+1. **Update project MEMORY.md** — What was done, decisions, blockers
+2. **Update domain ROLLUP** — Update `..\workspace-build\domains\build\ROLLUP.md` with:
+   - What We Worked On
+   - Completed
+   - In Progress
+   - Next Actions
+
+This keeps the domain (and Quinn) informed of project progress.
