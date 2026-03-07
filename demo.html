@@ -503,14 +503,14 @@
           </div>
 
           {/* Agent Dashboard - Room Style */}
-          <div style={{ marginBottom: '30px', maxWidth: '480px', margin: '0 auto 30px' }}>
+          <div style={{ marginBottom: '30px', maxWidth: '520px', margin: '0 auto 30px' }}>
             <div style={{ backgroundColor: '#0f172a', borderRadius: '16px', padding: '16px', border: '1px solid #334155', position: 'relative', overflow: 'hidden' }}>
-              {/* Top Section: Room (left) + Info (right, stacked) */}
+              {/* Top Section: Room (left) + Info (right, expanded) */}
               <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-                {/* Left: Sprite Room - bigger */}
+                {/* Left: Bigger Room with moving sprite */}
                 <div style={{
-                  width: '120px',
-                  height: '120px',
+                  width: '160px',
+                  height: '140px',
                   backgroundColor: '#1e293b',
                   borderRadius: '12px',
                   display: 'flex',
@@ -518,19 +518,29 @@
                   justifyContent: 'center',
                   position: 'relative',
                   border: '2px solid #334155',
-                  flexShrink: 0
+                  flexShrink: 0,
+                  overflow: 'hidden'
                 }}>
+                  {/* Room decorations */}
+                  <div style={{ position: 'absolute', top: '10px', left: '10px', width: '20px', height: '20px', background: '#334155', borderRadius: '4px' }} />
+                  <div style={{ position: 'absolute', top: '15px', right: '15px', width: '30px', height: '30px', background: '#334155', borderRadius: '50%' }} />
                   {/* Room floor */}
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '35px', background: 'linear-gradient(to top, #1e293b, #334155)', borderRadius: '0 0 10px 10px' }} />
-                  <div style={{ position: 'relative', zIndex: 1 }}>
-                    <Sprite variant="worker" state="idle" size={72} />
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '40px', background: 'linear-gradient(to top, #1e293b 0%, #334155 100%)', borderRadius: '0 0 10px 10px' }} />
+                  {/* Moving sprite */}
+                  <div style={{
+                    position: 'relative',
+                    zIndex: 1,
+                    animation: agentStatus === 'working' ? 'sprite-idle 1s ease-in-out infinite' : 'none',
+                    transform: agentStatus === 'working' ? 'translateX(0)' : 'translateX(0)'
+                  }}>
+                    <Sprite variant="worker" state={agentStatus === 'working' ? 'working' : 'idle'} size={48} />
                     {showSparkFloat && (
                       <div style={{
                         position: 'absolute',
                         top: '-5px',
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        fontSize: '16px',
+                        fontSize: '14px',
                         fontWeight: 'bold',
                         color: '#f39c12',
                         animation: 'spark-float 1.5s ease-out forwards',
@@ -543,22 +553,27 @@
                   </div>
                 </div>
 
-                {/* Right: Agent Info - stacked compact */}
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', paddingTop: '4px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                    <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>Agent Quinn</div>
-                  </div>
-                  <div style={{ fontSize: '10px', color: '#7f8c8d', marginBottom: '8px' }}>
-                    <span style={{ color: agentStatus === 'working' ? '#f39c12' : '#82E0AA' }}>
+                {/* Right: Agent Info - expanded with more details */}
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <div style={{ fontSize: '22px', fontWeight: 'bold', color: '#fff', marginBottom: '6px' }}>Agent Quinn</div>
+
+                  <div style={{ fontSize: '12px', color: '#7f8c8d', marginBottom: '12px', lineHeight: 1.5 }}>
+                    <span style={{ color: agentStatus === 'working' ? '#f39c12' : '#82E0AA', marginRight: '6px' }}>
                       {agentStatus === 'working' ? '●' : '○'}
                     </span>
-                    {' '}{agentStatus === 'working' ? 'working' : 'idle'} • Active since Jan 2026
+                    {agentStatus === 'working' ? 'working' : 'idle'}
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                    <span style={{ fontSize: '28px', fontWeight: 'bold', color: '#f39c12', lineHeight: 1 }}>
+
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '12px' }}>
+                    <span style={{ fontSize: '36px', fontWeight: 'bold', color: '#f39c12', lineHeight: 1 }}>
                       ⚡ {sparks.toLocaleString()}
                     </span>
-                    <span style={{ fontSize: '10px', color: '#7f8c8d' }}>sparks</span>
+                    <span style={{ fontSize: '12px', color: '#7f8c8d' }}>sparks</span>
+                  </div>
+
+                  <div style={{ fontSize: '11px', color: '#64748b', borderTop: '1px solid #334155', paddingTop: '10px' }}>
+                    <div style={{ marginBottom: '4px' }}>Active since Jan 2026</div>
+                    <div>Evolution: Stage 2 - Builder</div>
                   </div>
                 </div>
               </div>
