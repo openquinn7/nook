@@ -30,6 +30,80 @@ const SEED_VARIANTS = {
   }
 };
 
+// Stage 2 paths (chosen at stage 2)
+const STAGE_2_PATHS = {
+  worker: {
+    builder: { name: 'Builder', description: 'Focuses on construction and implementation', statBonus: { speed: 0.2 } },
+    autonomous: { name: 'Autonomous', description: 'Focuses on automation and efficiency', statBonus: { stamina: 0.2 } }
+  },
+  explorer: {
+    scout: { name: 'Scout', description: 'Focuses on discovery and exploration', statBonus: { luck: 0.2 } },
+    investigator: { name: 'Investigator', description: 'Focuses on analysis and research', statBonus: { speed: 0.1, luck: 0.1 } }
+  },
+  scholar: {
+    analyst: { name: 'Analyst', description: 'Focuses on data and patterns', statBonus: { luck: 0.2 } },
+    planner: { name: 'Planner', description: 'Focuses on strategy and roadmaps', statBonus: { speed: 0.1, stamina: 0.1 } }
+  }
+};
+
+// Stage 3 sub-branches (chosen at stage 3)
+const STAGE_3_SUB_BRANCHES = {
+  worker: {
+    builder: {
+      architect: { name: 'Architect', description: 'Designs and structures solutions', statBonus: { speed: 0.3, luck: 0.1 } },
+      craftsman: { name: 'Craftsman', description: 'Implements with precision', statBonus: { stamina: 0.3, speed: 0.1 } }
+    },
+    autonomous: {
+      optimizer: { name: 'Optimizer', description: 'Makes things run better', statBonus: { speed: 0.4 } },
+      autochef: { name: 'AutoChef', description: 'Self-managing systems', statBonus: { stamina: 0.4 } }
+    }
+  },
+  explorer: {
+    scout: {
+      navigator: { name: 'Navigator', description: 'Charts new territories', statBonus: { speed: 0.2, luck: 0.2 } },
+      pathfinder: { name: 'Pathfinder', description: 'Finds optimal routes', statBonus: { luck: 0.3, speed: 0.1 } }
+    },
+    investigator: {
+      tracer: { name: 'Tracer', description: 'Follows trails of data', statBonus: { luck: 0.3, speed: 0.1 } },
+      profiler: { name: 'Profiler', description: 'Builds detailed pictures', statBonus: { stamina: 0.2, luck: 0.2 } }
+    }
+  },
+  scholar: {
+    analyst: {
+      quant: { name: 'Quant', description: 'Numerical expert', statBonus: { luck: 0.3, speed: 0.1 } },
+      auditor: { name: 'Auditor', description: 'Thorough examiner', statBonus: { stamina: 0.2, luck: 0.2 } }
+    },
+    planner: {
+      strategist: { name: 'Strategist', description: 'Long-term thinker', statBonus: { speed: 0.2, stamina: 0.2 } },
+      coordinator: { name: 'Coordinator', description: 'Orchestrates efforts', statBonus: { luck: 0.2, stamina: 0.2 } }
+    }
+  }
+};
+
+// Stage 4 Apex forms (chosen at stage 4)
+const STAGE_4_APEX_FORMS = {
+  worker: {
+    champion: { name: 'Champion', description: 'Master of execution and delivery', emoji: '🏆', statBonus: { speed: 0.5, stamina: 0.5, luck: 0.3 } },
+    legend: { name: 'Legend', description: 'Known for incredible achievements', emoji: '⭐', statBonus: { speed: 0.3, stamina: 0.3, luck: 0.7 } }
+  },
+  explorer: {
+    champion: { name: 'Champion', description: 'Heroic discoverer', emoji: '🏆', statBonus: { speed: 0.5, luck: 0.5, stamina: 0.3 } },
+    legend: { name: 'Legend', description: 'Legendary explorer', emoji: '⭐', statBonus: { luck: 0.7, speed: 0.3, stamina: 0.3 } }
+  },
+  scholar: {
+    champion: { name: 'Champion', description: 'Wise champion', emoji: '🏆', statBonus: { stamina: 0.5, luck: 0.5, speed: 0.3 } },
+    legend: { name: 'Legend', description: 'Legendary mind', emoji: '⭐', statBonus: { luck: 0.7, stamina: 0.3, speed: 0.3 } }
+  }
+};
+
+// Evolution thresholds
+const EVOLUTION_THRESHOLDS = {
+  1: { sparks: 0, name: 'Seed' },
+  2: { sparks: 500, name: 'Sprout' },
+  3: { sparks: 2500, name: 'Bloom' },
+  4: { sparks: 10000, name: 'Apex' }
+};
+
 const SPRITE_STATES = {
   idle: {
     animation: 'wandering',
@@ -131,11 +205,14 @@ class Sprite {
       emoji: seed.emoji,
       stage: this.stage,
       path: this.path,
+      subBranch: this.subBranch,
+      apexForm: this.apexForm,
       state: this.state,
       cosmetics: { ...this.cosmetics },
       stats: { ...this.stats },
       xp: this.xp,
-      level: this.level
+      level: this.level,
+      evolutionData: this.getEvolutionData()
     };
   }
 
@@ -183,7 +260,104 @@ class Sprite {
     }
 
     this.path = path;
+
+    // Apply path stat bonus
+    const pathData = STAGE_2_PATHS[this.variant][path];
+    if (pathData && pathData.statBonus) {
+      for (const [stat, bonus] of Object.entries(pathData.statBonus)) {
+        this.stats[stat] += bonus;
+      }
+    }
+
     return this;
+  }
+
+  /**
+   * Choose sub-branch at stage 3
+   */
+  chooseSubBranch(subBranch) {
+    if (this.stage !== 3) {
+      throw new Error('Can only choose sub-branch at stage 3');
+    }
+
+    if (!this.path) {
+      throw new Error('Must have chosen a path at stage 2 first');
+    }
+
+    const validSubBranches = STAGE_3_SUB_BRANCHES[this.variant]?.[this.path];
+    if (!validSubBranches || !validSubBranches[subBranch]) {
+      throw new Error(`Invalid sub-branch: ${subBranch} for path: ${this.path}`);
+    }
+
+    this.subBranch = subBranch;
+
+    // Apply sub-branch stat bonus
+    const subBranchData = validSubBranches[subBranch];
+    if (subBranchData && subBranchData.statBonus) {
+      for (const [stat, bonus] of Object.entries(subBranchData.statBonus)) {
+        this.stats[stat] += bonus;
+      }
+    }
+
+    return this;
+  }
+
+  /**
+   * Choose apex form at stage 4
+   */
+  chooseApexForm(apexForm) {
+    if (this.stage !== 4) {
+      throw new Error('Can only choose apex form at stage 4');
+    }
+
+    const validApexForms = STAGE_4_APEX_FORMS[this.variant];
+    if (!validApexForms || !validApexForms[apexForm]) {
+      throw new Error(`Invalid apex form: ${apexForm} for variant: ${this.variant}`);
+    }
+
+    this.apexForm = apexForm;
+
+    // Apply apex stat bonus
+    const apexData = validApexForms[apexForm];
+    if (apexData && apexData.statBonus) {
+      for (const [stat, bonus] of Object.entries(apexData.statBonus)) {
+        this.stats[stat] += bonus;
+      }
+    }
+
+    return this;
+  }
+
+  /**
+   * Get evolution data for rendering
+   */
+  getEvolutionData() {
+    return {
+      stage: this.stage,
+      path: this.path,
+      subBranch: this.subBranch,
+      apexForm: this.apexForm,
+      thresholds: EVOLUTION_THRESHOLDS,
+      currentThreshold: EVOLUTION_THRESHOLDS[this.stage],
+      nextThreshold: EVOLUTION_THRESHOLDS[this.stage + 1] || null,
+      progress: this.nextThreshold ? (this.xp / this.nextThreshold.sparks) * 100 : 100
+    };
+  }
+
+  /**
+   * Get available choices for current stage
+   */
+  getAvailableChoices() {
+    if (this.stage === 2 && !this.path) {
+      return { type: 'path', choices: STAGE_2_PATHS[this.variant] };
+    }
+    if (this.stage === 3 && this.path && !this.subBranch) {
+      return { type: 'subBranch', choices: STAGE_3_SUB_BRANCHES[this.variant][this.path] };
+    }
+    if (this.stage === 4 && !this.apexForm) {
+      return { type: 'apexForm', choices: STAGE_4_APEX_FORMS[this.variant] };
+    }
+    return null;
   }
 
   /**
@@ -197,5 +371,14 @@ class Sprite {
 
 // Export
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { Sprite, SEED_VARIANTS, SPRITE_STATES, COSMETIC_SLOTS };
+  module.exports = {
+    Sprite,
+    SEED_VARIANTS,
+    SPRITE_STATES,
+    COSMETIC_SLOTS,
+    STAGE_2_PATHS,
+    STAGE_3_SUB_BRANCHES,
+    STAGE_4_APEX_FORMS,
+    EVOLUTION_THRESHOLDS
+  };
 }
