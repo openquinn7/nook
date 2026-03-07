@@ -1,0 +1,483 @@
+/**
+ * Nook SVG Sprites
+ * Pixel-inspired cute sprites - Stardew/Animal Crossing/90s FF vibes
+ *
+ * Chunky, warm, inviting designs
+ */
+
+const SVG_SPRITES = {
+  // Seed - tiny starting sprite, warm beige
+  seed: {
+    idle: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Body - chunky round -->
+        <rect x="8" y="12" width="16" height="14" rx="3" fill="#E8D5B7"/>
+        <rect x="10" y="14" width="12" height="10" rx="2" fill="#F5E6D3"/>
+        <!-- Blush -->
+        <rect x="9" y="18" width="3" height="2" fill="#F5B7B1"/>
+        <rect x="20" y="18" width="3" height="2" fill="#F5B7B1"/>
+        <!-- Eyes - simple dots -->
+        <rect x="11" y="15" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="19" y="15" width="2" height="2" fill="#4A4A4A"/>
+        <!-- Smile - simple line -->
+        <rect x="13" y="20" width="6" height="1" fill="#4A4A4A"/>
+        <!-- Sprout on top -->
+        <rect x="15" y="8" width="2" height="4" fill="#82E0AA"/>
+        <rect x="13" y="9" width="2" height="2" fill="#82E0AA"/>
+        <rect x="17" y="9" width="2" height="2" fill="#82E0AA"/>
+      </svg>
+    `,
+    working: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Body -->
+        <rect x="8" y="12" width="16" height="14" rx="3" fill="#E8D5B7"/>
+        <rect x="10" y="14" width="12" height="10" rx="2" fill="#F5E6D3"/>
+        <!-- Focused eyes -->
+        <rect x="11" y="15" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="19" y="15" width="2" height="2" fill="#4A4A4A"/>
+        <!-- Determined eyebrows -->
+        <rect x="10" y="13" width="3" height="1" fill="#4A4A4A"/>
+        <rect x="19" y="13" width="3" height="1" fill="#4A4A4A"/>
+        <!-- Small smile -->
+        <rect x="14" y="20" width="4" height="1" fill="#4A4A4A"/>
+        <!-- Sprout working -->
+        <rect x="15" y="6" width="2" height="6" fill="#82E0AA"/>
+        <rect x="12" y="7" width="2" height="2" fill="#82E0AA"/>
+        <rect x="18" y="7" width="2" height="2" fill="#82E0AA"/>
+      </svg>
+    `,
+    success: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Sparkles -->
+        <rect x="4" y="6" width="2" height="2" fill="#FFD700"/>
+        <rect x="26" y="4" width="1" height="1" fill="#FFD700"/>
+        <rect x="28" y="10" width="1" height="1" fill="#FFD700"/>
+        <!-- Body -->
+        <rect x="8" y="14" width="16" height="12" rx="3" fill="#E8D5B7"/>
+        <rect x="10" y="16" width="12" height="8" rx="2" fill="#F5E6D3"/>
+        <!-- Happy closed eyes -->
+        <rect x="10" y="16" width="4" height="1" fill="#4A4A4A"/>
+        <rect x="18" y="16" width="4" height="1" fill="#4A4A4A"/>
+        <!-- Big smile -->
+        <rect x="12" y="20" width="8" height="1" fill="#4A4A4A"/>
+        <rect x="11" y="19" width="1" height="1" fill="#4A4A4A"/>
+        <rect x="20" y="19" width="1" height="1" fill="#4A4A4A"/>
+        <!-- Rosy cheeks -->
+        <rect x="9" y="18" width="3" height="2" fill="#FFB6C1"/>
+        <rect x="20" y="18" width="3" height="2" fill="#FFB6C1"/>
+        <!-- Sprout with star -->
+        <rect x="15" y="8" width="2" height="4" fill="#82E0AA"/>
+        <rect x="14" y="10" width="4" height="1" fill="#FFD700"/>
+      </svg>
+    `,
+    failure: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Body -->
+        <rect x="8" y="12" width="16" height="14" rx="3" fill="#E8D5B7"/>
+        <rect x="10" y="14" width="12" height="10" rx="2" fill="#F5E6D3"/>
+        <!-- X eyes -->
+        <rect x="10" y="14" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="13" y="14" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="10" y="17" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="13" y="17" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="17" y="14" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="20" y="14" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="17" y="17" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="20" y="17" width="2" height="2" fill="#4A4A4A"/>
+        <!-- Wavy mouth -->
+        <rect x="12" y="21" width="2" height="1" fill="#4A4A4A"/>
+        <rect x="15" y="20" width="2" height="1" fill="#4A4A4A"/>
+        <rect x="18" y="21" width="2" height="1" fill="#4A4A4A"/>
+        <!-- Droplet -->
+        <rect x="24" y="10" width="2" height="3" fill="#87CEEB"/>
+      </svg>
+    `,
+    sleeping: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Zzz -->
+        <rect x="20" y="4" width="2" height="2" fill="#9370DB"/>
+        <rect x="23" y="2" width="1" height="1" fill="#9370DB"/>
+        <!-- Body -->
+        <rect x="8" y="14" width="16" height="12" rx="3" fill="#E8D5B7"/>
+        <rect x="10" y="16" width="12" height="8" rx="2" fill="#F5E6D3"/>
+        <!-- Closed eyes -->
+        <rect x="11" y="17" width="3" height="1" fill="#4A4A4A"/>
+        <rect x="18" y="17" width="3" height="1" fill="#4A4A4A"/>
+        <!-- Small mouth -->
+        <rect x="14" y="21" width="4" height="1" fill="#4A4A4A"/>
+        <!-- Drooling -->
+        <rect x="16" y="23" width="2" height="1" fill="#87CEEB"/>
+        <!-- Sleepy sprout -->
+        <rect x="15" y="10" width="2" height="4" fill="#82E0AA"/>
+      </svg>
+    `
+  },
+
+  // Worker - warm amber/orange, hard hat, toolbox vibes
+  worker: {
+    idle: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Body -->
+        <rect x="8" y="14" width="16" height="14" rx="2" fill="#F4D03F"/>
+        <rect x="10" y="16" width="12" height="10" rx="1" fill="#F7DC6F"/>
+        <!-- Hard hat -->
+        <rect x="6" y="8" width="20" height="6" rx="1" fill="#E67E22"/>
+        <rect x="8" y="10" width="16" height="2" fill="#D35400"/>
+        <rect x="10" y="6" width="12" height="3" fill="#E67E22"/>
+        <!-- Blush -->
+        <rect x="9" y="20" width="3" height="2" fill="#F5B7B1"/>
+        <rect x="20" y="20" width="3" height="2" fill="#F5B7B1"/>
+        <!-- Eyes -->
+        <rect x="11" y="18" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="19" y="18" width="2" height="2" fill="#4A4A4A"/>
+        <!-- Smile -->
+        <rect x="13" y="22" width="6" height="1" fill="#4A4A4A"/>
+        <!-- Hammer accessory -->
+        <rect x="24" y="20" width="4" height="2" fill="#95A5A6"/>
+        <rect x="25" y="22" width="2" height="4" fill="#7F8C8D"/>
+      </svg>
+    `,
+    working: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Gear spinning -->
+        <rect x="24" y="4" width="4" height="4" fill="#95A5A6"/>
+        <rect x="25" y="2" width="1" height="2" fill="#95A5A6"/>
+        <rect x="26" y="10" width="1" height="2" fill="#95A5A6"/>
+        <rect x="23" y="5" width="1" height="2" fill="#95A5A6"/>
+        <rect x="28" y="5" width="1" height="2" fill="#95A5A6"/>
+        <!-- Body -->
+        <rect x="8" y="16" width="16" height="12" rx="2" fill="#F4D03F"/>
+        <rect x="10" y="18" width="12" height="8" rx="1" fill="#F7DC6F"/>
+        <!-- Hard hat -->
+        <rect x="6" y="10" width="20" height="5" rx="1" fill="#E67E22"/>
+        <rect x="8" y="12" width="16" height="2" fill="#D35400"/>
+        <!-- Focused eyes -->
+        <rect x="11" y="20" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="19" y="20" width="2" height="2" fill="#4A4A4A"/>
+        <!-- Determined eyebrows -->
+        <rect x="10" y="18" width="3" height="1" fill="#4A4A4A"/>
+        <rect x="19" y="18" width="3" height="1" fill="#4A4A4A"/>
+        <!-- Working smile -->
+        <rect x="14" y="24" width="4" height="1" fill="#4A4A4A"/>
+      </svg>
+    `,
+    success: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Stars -->
+        <rect x="4" y="6" width="2" height="2" fill="#FFD700"/>
+        <rect x="26" y="4" width="1" height="1" fill="#FFD700"/>
+        <rect x="28" y="12" width="1" height="1" fill="#FFD700"/>
+        <!-- Body -->
+        <rect x="8" y="16" width="16" height="12" rx="2" fill="#F4D03F"/>
+        <rect x="10" y="18" width="12" height="8" rx="1" fill="#F7DC6F"/>
+        <!-- Hard hat -->
+        <rect x="6" y="10" width="20" height="5" rx="1" fill="#E67E22"/>
+        <rect x="8" y="12" width="16" height="2" fill="#D35400"/>
+        <!-- Star on hat -->
+        <rect x="15" y="7" width="2" height="2" fill="#FFD700"/>
+        <!-- Happy eyes -->
+        <rect x="10" y="20" width="4" height="1" fill="#4A4A4A"/>
+        <rect x="18" y="20" width="4" height="1" fill="#4A4A4A"/>
+        <!-- Big smile -->
+        <rect x="12" y="23" width="8" height="1" fill="#4A4A4A"/>
+        <rect x="11" y="22" width="1" height="1" fill="#4A4A4A"/>
+        <rect x="20" y="22" width="1" height="1" fill="#4A4A4A"/>
+        <!-- Rosy cheeks -->
+        <rect x="9" y="21" width="3" height="2" fill="#FFB6C1"/>
+        <rect x="20" y="21" width="3" height="2" fill="#FFB6C1"/>
+      </svg>
+    `,
+    failure: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Cracked hat -->
+        <rect x="6" y="10" width="8" height="3" fill="#E67E22"/>
+        <rect x="18" y="10" width="8" height="3" fill="#E67E22"/>
+        <rect x="14" y="8" width="4" height="3" fill="#E67E22"/>
+        <!-- Body -->
+        <rect x="8" y="14" width="16" height="14" rx="2" fill="#F4D03F"/>
+        <rect x="10" y="16" width="12" height="10" rx="1" fill="#F7DC6F"/>
+        <!-- X eyes -->
+        <rect x="10" y="18" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="13" y="18" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="10" y="21" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="13" y="21" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="17" y="18" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="20" y="18" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="17" y="21" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="20" y="21" width="2" height="2" fill="#4A4A4A"/>
+        <!-- Wavy mouth -->
+        <rect x="12" y="25" width="2" height="1" fill="#4A4A4A"/>
+        <rect x="15" y="24" width="2" height="1" fill="#4A4A4A"/>
+        <rect x="18" y="25" width="2" height="1" fill="#4A4A4A"/>
+        <!-- Sweat -->
+        <rect x="26" y="14" width="2" height="3" fill="#87CEEB"/>
+      </svg>
+    `,
+    sleeping: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Zzz -->
+        <rect x="20" y="4" width="2" height="2" fill="#9370DB"/>
+        <rect x="23" y="2" width="1" height="1" fill="#9370DB"/>
+        <!-- Body -->
+        <rect x="8" y="16" width="16" height="12" rx="2" fill="#F4D03F"/>
+        <rect x="10" y="18" width="12" height="8" rx="1" fill="#F7DC6F"/>
+        <!-- Sleeping hat -->
+        <rect x="6" y="10" width="20" height="5" rx="1" fill="#E67E22"/>
+        <rect x="8" y="12" width="16" height="2" fill="#D35400"/>
+        <!-- Closed eyes -->
+        <rect x="11" y="20" width="3" height="1" fill="#4A4A4A"/>
+        <rect x="18" y="20" width="3" height="1" fill="#4A4A4A"/>
+        <!-- Small mouth -->
+        <rect x="14" y="24" width="4" height="1" fill="#4A4A4A"/>
+      </svg>
+    `
+  },
+
+  // Explorer - green, adventurer hat, explorer vibes
+  explorer: {
+    idle: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Body -->
+        <rect x="8" y="14" width="16" height="14" rx="2" fill="#82E0AA"/>
+        <rect x="10" y="16" width="12" height="10" rx="1" fill="#ABEBC6"/>
+        <!-- Explorer hat -->
+        <rect x="4" y="10" width="24" height="4" fill="#27AE60"/>
+        <rect x="8" y="6" width="16" height="5" rx="1" fill="#27AE60"/>
+        <rect x="10" y="4" width="12" height="3" fill="#1E8449"/>
+        <!-- Blush -->
+        <rect x="9" y="20" width="3" height="2" fill="#F5B7B1"/>
+        <rect x="20" y="20" width="3" height="2" fill="#F5B7B1"/>
+        <!-- Eyes -->
+        <rect x="11" y="18" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="19" y="18" width="2" height="2" fill="#4A4A4A"/>
+        <!-- Smile -->
+        <rect x="13" y="22" width="6" height="1" fill="#4A4A4A"/>
+        <!-- Compass -->
+        <rect x="24" y="22" width="4" height="4" fill="#E74C3C"/>
+        <rect x="25" y="23" width="2" height="2" fill="white"/>
+      </svg>
+    `,
+    working: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Spinning compass -->
+        <rect x="26" y="4" width="3" height="3" fill="#E74C3C"/>
+        <rect x="24" y="6" width="1" height="1" fill="#E74C3C"/>
+        <rect x="30" y="6" width="1" height="1" fill="#E74C3C"/>
+        <!-- Body -->
+        <rect x="8" y="16" width="16" height="12" rx="2" fill="#82E0AA"/>
+        <rect x="10" y="18" width="12" height="8" rx="1" fill="#ABEBC6"/>
+        <!-- Explorer hat -->
+        <rect x="4" y="12" width="24" height="3" fill="#27AE60"/>
+        <rect x="8" y="8" width="16" height="5" rx="1" fill="#27AE60"/>
+        <rect x="10" y="6" width="12" height="3" fill="#1E8449"/>
+        <!-- Excited eyes -->
+        <rect x="11" y="20" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="19" y="20" width="2" height="2" fill="#4A4A4A"/>
+        <!-- Smile -->
+        <rect x="14" y="24" width="4" height="1" fill="#4A4A4A"/>
+      </svg>
+    `,
+    success: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Sparkles -->
+        <rect x="4" y="6" width="2" height="2" fill="#FFD700"/>
+        <rect x="26" y="4" width="1" height="1" fill="#FFD700"/>
+        <rect x="28" y="14" width="1" height="1" fill="#FFD700"/>
+        <!-- Body -->
+        <rect x="8" y="16" width="16" height="12" rx="2" fill="#82E0AA"/>
+        <rect x="10" y="18" width="12" height="8" rx="1" fill="#ABEBC6"/>
+        <!-- Explorer hat -->
+        <rect x="4" y="12" width="24" height="3" fill="#27AE60"/>
+        <rect x="8" y="8" width="16" height="5" rx="1" fill="#27AE60"/>
+        <rect x="10" y="6" width="12" height="3" fill="#1E8449"/>
+        <!-- Star on hat -->
+        <rect x="15" y="7" width="2" height="2" fill="#FFD700"/>
+        <!-- Happy eyes -->
+        <rect x="10" y="20" width="4" height="1" fill="#4A4A4A"/>
+        <rect x="18" y="20" width="4" height="1" fill="#4A4A4A"/>
+        <!-- Big smile -->
+        <rect x="12" y="23" width="8" height="1" fill="#4A4A4A"/>
+        <rect x="11" y="22" width="1" height="1" fill="#4A4A4A"/>
+        <rect x="20" y="22" width="1" height="1" fill="#4A4A4A"/>
+        <!-- Rosy cheeks -->
+        <rect x="9" y="21" width="3" height="2" fill="#FFB6C1"/>
+        <rect x="20" y="21" width="3" height="2" fill="#FFB6C1"/>
+      </svg>
+    `,
+    failure: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Broken compass -->
+        <rect x="26" y="6" width="3" height="3" fill="#E74C3C" opacity="0.5"/>
+        <rect x="24" y="8" width="1" height="1" fill="#E74C3C"/>
+        <rect x="30" y="8" width="1" height="1" fill="#E74C3C"/>
+        <!-- Body -->
+        <rect x="8" y="14" width="16" height="14" rx="2" fill="#82E0AA"/>
+        <rect x="10" y="16" width="12" height="10" rx="1" fill="#ABEBC6"/>
+        <!-- Tilted hat -->
+        <rect x="2" y="12" width="24" height="3" fill="#27AE60"/>
+        <rect x="6" y="8" width="14" height="5" rx="1" fill="#27AE60" transform="rotate(-10 6 8)"/>
+        <!-- X eyes -->
+        <rect x="10" y="18" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="13" y="18" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="10" y="21" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="13" y="21" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="17" y="18" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="20" y="18" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="17" y="21" width="2" height="2" fill="#4A4A4A"/>
+        <rect x="20" y="21" width="2" height="2" fill="#4A4A4A"/>
+        <!-- Sad mouth -->
+        <rect x="12" y="25" width="2" height="1" fill="#4A4A4A"/>
+        <rect x="15" y="24" width="2" height="1" fill="#4A4A4A"/>
+        <rect x="18" y="25" width="2" height="1" fill="#4A4A4A"/>
+        <!-- Sweat -->
+        <rect x="26" y="16" width="2" height="3" fill="#87CEEB"/>
+      </svg>
+    `,
+    sleeping: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Zzz -->
+        <rect x="18" y="4" width="2" height="2" fill="#9370DB"/>
+        <rect x="21" y="2" width="1" height="1" fill="#9370DB"/>
+        <!-- Body -->
+        <rect x="8" y="16" width="16" height="12" rx="2" fill="#82E0AA"/>
+        <rect x="10" y="18" width="12" height="8" rx="1" fill="#ABEBC6"/>
+        <!-- Sleeping hat -->
+        <rect x="4" y="12" width="24" height="3" fill="#27AE60"/>
+        <rect x="8" y="8" width="16" height="5" rx="1" fill="#27AE60"/>
+        <!-- Closed eyes -->
+        <rect x="11" y="20" width="3" height="1" fill="#4A4A4A"/>
+        <rect x="18" y="20" width="3" height="1" fill="#4A4A4A"/>
+        <!-- Small mouth -->
+        <rect x="14" y="24" width="4" height="1" fill="#4A4A4A"/>
+      </svg>
+    `
+  },
+
+  // Scholar - blue/purple, graduation cap, book vibes
+  scholar: {
+    idle: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Body -->
+        <rect x="8" y="14" width="16" height="14" rx="2" fill="#AED6F1"/>
+        <rect x="10" y="16" width="12" height="10" rx="1" fill="#D4E6F1"/>
+        <!-- Graduation cap -->
+        <rect x="10" y="4" width="12" height="6" fill="#2C3E50"/>
+        <rect x="6" y="8" width="20" height="3" fill="#34495E"/>
+        <rect x="14" y="2" width="4" height="3" fill="#F39C12"/>
+        <!-- Tassel -->
+        <rect x="18" y="8" width="1" height="6" fill="#F39C12"/>
+        <rect x="17" y="14" width="2" height="2" fill="#F39C12"/>
+        <!-- Blush -->
+        <rect x="9" y="20" width="3" height="2" fill="#F5B7B1"/>
+        <rect x="20" y="20" width="3" height="2" fill="#F5B7B1"/>
+        <!-- Eyes (glasses) -->
+        <rect x="10" y="17" width="4" height="3" fill="white" stroke="#2C3E50" stroke-width="1"/>
+        <rect x="18" y="17" width="4" height="3" fill="white" stroke="#2C3E50" stroke-width="1"/>
+        <rect x="11" y="18" width="2" height="1" fill="#4A4A4A"/>
+        <rect x="19" y="18" width="2" height="1" fill="#4A4A4A"/>
+        <!-- Smile -->
+        <rect x="13" y="23" width="6" height="1" fill="#4A4A4A"/>
+        <!-- Book -->
+        <rect x="24" y="18" width="4" height="6" fill="#E74C3C"/>
+        <rect x="26" y="19" width="1" height="4" fill="#F39C12"/>
+      </svg>
+    `,
+    working: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Body -->
+        <rect x="8" y="16" width="16" height="12" rx="2" fill="#AED6F1"/>
+        <rect x="10" y="18" width="12" height="8" rx="1" fill="#D4E6F1"/>
+        <!-- Graduation cap -->
+        <rect x="10" y="6" width="12" height="5" fill="#2C3E50"/>
+        <rect x="6" y="10" width="20" height="3" fill="#34495E"/>
+        <rect x="14" y="4" width="4" height="3" fill="#F39C12"/>
+        <!-- Swinging tassel -->
+        <rect x="18" y="10" width="1" height="5" fill="#F39C12">
+          <animate attributeName="x" values="18;20;18" dur="0.5s" repeatCount="indefinite"/>
+        </rect>
+        <!-- Focused eyes -->
+        <rect x="10" y="19" width="4" height="2" fill="white" stroke="#2C3E50" stroke-width="1"/>
+        <rect x="18" y="19" width="4" height="2" fill="white" stroke="#2C3E50" stroke-width="1"/>
+        <rect x="11" y="20" width="2" height="1" fill="#4A4A4A"/>
+        <rect x="19" y="20" width="2" height="1" fill="#4A4A4A"/>
+        <!-- Small smile -->
+        <rect x="14" y="25" width="4" height="1" fill="#4A4A4A"/>
+      </svg>
+    `,
+    success: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Lightbulb -->
+        <rect x="26" y="4" width="4" height="4" fill="#F39C12"/>
+        <rect x="27" y="8" width="2" height="2" fill="#F39C12"/>
+        <!-- Stars -->
+        <rect x="4" y="6" width="2" height="2" fill="#FFD700"/>
+        <rect x="8" y="2" width="1" height="1" fill="#FFD700"/>
+        <!-- Body -->
+        <rect x="8" y="16" width="16" height="12" rx="2" fill="#AED6F1"/>
+        <rect x="10" y="18" width="12" height="8" rx="1" fill="#D4E6F1"/>
+        <!-- Graduation cap -->
+        <rect x="10" y="6" width="12" height="5" fill="#2C3E50"/>
+        <rect x="6" y="10" width="20" height="3" fill="#34495E"/>
+        <rect x="14" y="4" width="4" height="3" fill="#F39C12"/>
+        <!-- Star on cap -->
+        <rect x="15" y="6" width="2" height="2" fill="#FFD700"/>
+        <!-- Happy eyes -->
+        <rect x="10" y="20" width="4" height="1" fill="#4A4A4A"/>
+        <rect x="18" y="20" width="4" height="1" fill="#4A4A4A"/>
+        <!-- Big smile -->
+        <rect x="12" y="24" width="8" height="1" fill="#4A4A4A"/>
+        <rect x="11" y="23" width="1" height="1" fill="#4A4A4A"/>
+        <rect x="20" y="23" width="1" height="1" fill="#4A4A4A"/>
+        <!-- Rosy cheeks -->
+        <rect x="9" y="22" width="3" height="2" fill="#FFB6C1"/>
+        <rect x="20" y="22" width="3" height="2" fill="#FFB6C1"/>
+      </svg>
+    `,
+    failure: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Question marks -->
+        <rect x="4" y="8" width="2" height="2" fill="#E74C3C"/>
+        <rect x="5" y="6" width="1" height="1" fill="#E74C3C"/>
+        <rect x="26" y="6" width="1" height="1" fill="#E74C3C"/>
+        <!-- Body -->
+        <rect x="8" y="14" width="16" height="14" rx="2" fill="#AED6F1"/>
+        <rect x="10" y="16" width="12" height="10" rx="1" fill="#D4E6F1"/>
+        <!-- Tilted cap -->
+        <rect x="8" y="6" width="12" height="5" fill="#2C3E50" transform="rotate(-10 8 6)"/>
+        <rect x="6" y="10" width="18" height="3" fill="#34495E" transform="rotate(-5 6 10)"/>
+        <!-- Confused eyes -->
+        <rect x="10" y="18" width="4" height="3" fill="white" stroke="#2C3E50" stroke-width="1"/>
+        <rect x="18" y="18" width="4" height="3" fill="white" stroke="#2C3E50" stroke-width="1"/>
+        <rect x="10" y="19" width="2" height="1" fill="#4A4A4A"/>
+        <rect x="20" y="19" width="2" height="1" fill="#4A4A4A"/>
+        <!-- Wavy mouth -->
+        <rect x="12" y="25" width="2" height="1" fill="#4A4A4A"/>
+        <rect x="15" y="24" width="2" height="1" fill="#4A4A4A"/>
+        <rect x="18" y="25" width="2" height="1" fill="#4A4A4A"/>
+      </svg>
+    `,
+    sleeping: `
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <!-- Zzz -->
+        <rect x="18" y="4" width="2" height="2" fill="#9370DB"/>
+        <rect x="21" y="2" width="1" height="1" fill="#9370DB"/>
+        <!-- Body -->
+        <rect x="8" y="16" width="16" height="12" rx="2" fill="#AED6F1"/>
+        <rect x="10" y="18" width="12" height="8" rx="1" fill="#D4E6F1"/>
+        <!-- Sleeping cap -->
+        <rect x="10" y="8" width="12" height="5" fill="#2C3E50"/>
+        <rect x="6" y="11" width="20" height="3" fill="#34495E"/>
+        <!-- Closed eyes -->
+        <rect x="11" y="20" width="3" height="1" fill="#4A4A4A"/>
+        <rect x="18" y="20" width="3" height="1" fill="#4A4A4A"/>
+        <!-- Small mouth -->
+        <rect x="14" y="24" width="4" height="1" fill="#4A4A4A"/>
+      </svg>
+    `
+  }
+};
+
+// Export
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { SVG_SPRITES };
+}

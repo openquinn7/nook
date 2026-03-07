@@ -326,6 +326,44 @@ class SparkEngine {
 
     return this.lifetimeSparks;
   }
+
+  /**
+   * Save events to file (for persistence)
+   * Per spec: Events are immutable, store raw events
+   */
+  saveEvents(filepath) {
+    const data = {
+      version: '1.0',
+      savedAt: Date.now(),
+      events: this.events
+    };
+    const fs = require('fs');
+    fs.writeFileSync(filepath, JSON.stringify(data, null, 2));
+    return this.events.length;
+  }
+
+  /**
+   * Load events from file (for persistence)
+   * Per spec: Sparks are recomputed from raw events
+   */
+  loadEvents(filepath) {
+    const fs = require('fs');
+    if (!fs.existsSync(filepath)) {
+      return 0;
+    }
+
+    try {
+      const data = JSON.parse(fs.readFileSync(filepath, 'utf-8'));
+      if (data.events && Array.isArray(data.events)) {
+        this.events = data.events;
+        this.lifetimeSparks = this.events.reduce((sum, e) => sum + (e.sparks || 0), 0);
+        return this.events.length;
+      }
+    } catch (e) {
+      console.error('Failed to load events:', e.message);
+    }
+    return 0;
+  }
 }
 
 // Export for Node.js
