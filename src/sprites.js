@@ -168,8 +168,8 @@ class Sprite {
    * Choose evolution path at stage 2
    */
   choosePath(path) {
-    if (this.stage !== 1) {
-      throw new Error('Can only choose path at stage 1');
+    if (this.stage !== 2) {
+      throw new Error('Can only choose path at stage 2');
     }
 
     const validPaths = {

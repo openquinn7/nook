@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sprite } from './sprite-renderer';
 import { SparkEngine } from './spark-engine';
+import { AchievementSystem, ACHIEVEMENT_TIERS } from './achievements';
 
 const DASHBOARD_STYLES = {
   container: {
@@ -88,19 +89,73 @@ const DASHBOARD_STYLES = {
   eventTime: {
     fontSize: '12px',
     color: '#7f8c8d'
+  },
+  achievementCard: {
+    backgroundColor: '#fff',
+    borderRadius: '12px',
+    padding: '16px',
+    marginBottom: '16px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+  },
+  achievementItem: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '10px',
+    borderRadius: '8px',
+    marginBottom: '8px',
+    gap: '12px'
+  },
+  achievementIcon: {
+    fontSize: '24px'
+  },
+  achievementInfo: {
+    flex: 1
+  },
+  achievementName: {
+    fontWeight: 'bold',
+    fontSize: '14px'
+  },
+  achievementDesc: {
+    fontSize: '12px',
+    color: '#7f8c8d'
+  },
+  streakBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: '8px 16px',
+    borderRadius: '20px',
+    fontWeight: 'bold'
+  },
+  chestItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '12px',
+    backgroundColor: '#f8f9fa',
+    borderRadius: '8px',
+    marginBottom: '8px'
   }
 };
 
-export function NookDashboard({ sparkEngine, profile }) {
+export function NookDashboard({ sparkEngine, profile, achievementSystem }) {
   const [events, setEvents] = useState([]);
   const [sparks, setSparks] = useState(0);
+  const [achievements, setAchievements] = useState([]);
+  const [streak, setStreak] = useState({ current: 0, best: 0 });
+  const [chests, setChests] = useState([]);
 
   useEffect(() => {
     if (sparkEngine) {
       setEvents(sparkEngine.getEvents().slice(-20).reverse());
       setSparks(sparkEngine.getBalance());
     }
-  }, [sparkEngine]);
+    if (achievementSystem) {
+      setAchievements(achievementSystem.getUnlockedAchievements());
+      setStreak(achievementSystem.getStreak());
+      setChests(achievementSystem.getChests());
+    }
+  }, [sparkEngine, achievementSystem]);
 
   const getNextEvolution = (currentSparks) => {
     const thresholds = [
@@ -214,6 +269,94 @@ export function NookDashboard({ sparkEngine, profile }) {
           )}
         </div>
       </div>
+
+      {/* Streak & Achievements */}
+      {(achievementSystem || streak.current > 0 || achievements.length > 0) && (
+        <div style={DASHBOARD_STYLES.card}>
+          <h3 style={{ marginTop: 0 }}>Progress</h3>
+
+          {/* Streak */}
+          <div style={{ marginBottom: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontWeight: 'bold' }}>Daily Streak</span>
+              <span style={DASHBOARD_STYLES.streakBadge}>
+                🔥 {streak.current} days
+              </span>
+            </div>
+            <div style={{ fontSize: '12px', color: '#7f8c8d' }}>
+              Best: {streak.best} days
+            </div>
+          </div>
+
+          {/* Unlocked Chests */}
+          {chests.length > 0 && (
+            <div style={{ marginBottom: '20px' }}>
+              <h4 style={{ marginBottom: '10px' }}>Unlocked Chests</h4>
+              {chests.map((chest, index) => (
+                <div key={index} style={DASHBOARD_STYLES.chestItem}>
+                  <span>📦 {chest.name}</span>
+                  <button
+                    onClick={() => achievementSystem?.claimChest(index)}
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: '6px',
+                      border: 'none',
+                      backgroundColor: '#3498db',
+                      color: '#fff',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Open
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Achievements */}
+          <div>
+            <h4 style={{ marginBottom: '10px' }}>Achievements ({achievements.length})</h4>
+            {achievements.length === 0 ? (
+              <div style={{ color: '#7f8c8d', textAlign: 'center', padding: '20px' }}>
+                No achievements yet. Keep working to unlock them!
+              </div>
+            ) : (
+              achievements.map((achievement, index) => (
+                <div
+                  key={index}
+                  style={{
+                    ...DASHBOARD_STYLES.achievementItem,
+                    backgroundColor: ACHIEVEMENT_TIERS[achievement.tier]?.color + '20' || '#f8f9fa'
+                  }}
+                >
+                  <span style={DASHBOARD_STYLES.achievementIcon}>🏆</span>
+                  <div style={DASHBOARD_STYLES.achievementInfo}>
+                    <div style={DASHBOARD_STYLES.achievementName}>
+                      {achievement.name}
+                      <span
+                        style={{
+                          marginLeft: '8px',
+                          fontSize: '10px',
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          backgroundColor: ACHIEVEMENT_TIERS[achievement.tier]?.color || '#95a5a6',
+                          color: '#fff'
+                        }}
+                      >
+                        {achievement.tier}
+                      </span>
+                    </div>
+                    <div style={DASHBOARD_STYLES.achievementDesc}>{achievement.description}</div>
+                  </div>
+                  <div style={{ color: '#f39c12', fontWeight: 'bold', fontSize: '14px' }}>
+                    +{achievement.sparkReward}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

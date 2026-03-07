@@ -65,7 +65,11 @@ class SparkEngine {
     if (event.type !== 'agent.completed') return 0;
 
     const tokens = event.tokens || 0;
-    const workUnits = this.getDistinctWorkUnits(event.agentId);
+
+    // Include current event's workUnit in the count
+    const allWorkUnits = this.getDistinctWorkUnits(event.agentId);
+    const currentWorkUnit = event.workUnitId;
+    const workUnits = currentWorkUnit ? allWorkUnits + 1 : allWorkUnits;
 
     return SPARK_FORMULA(tokens, workUnits);
   }

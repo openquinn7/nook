@@ -142,7 +142,64 @@ nook.emit({
 
 ---
 
-## 6. Storage
+## 8. Achievements
+
+### Achievement System
+
+Achievements track agent milestones and reward sparks for meaningful actions.
+
+```typescript
+interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  tier: "common" | "uncommon" | "rare" | "epic" | "legendary";
+  sparkReward: number;
+  unlockedAt: number;
+}
+```
+
+### Achievement Tiers
+
+| Tier | Drop Rate | Color |
+|------|-----------|-------|
+| Common | 60% | Gray |
+| Uncommon | 25% | Green |
+| Rare | 10% | Blue |
+| Epic | 4% | Purple |
+| Legendary | 1% | Orange |
+
+### Streak System
+
+Daily activity streaks reward consistency:
+
+| Streak | Reward |
+|--------|--------|
+| 7 days | Tier 1 Gacha Chest |
+| 30 days | Tier 2 Gacha Chest |
+| 100 days | Tier 3 Gacha Chest |
+| 365 days | Legendary Cosmetic |
+
+### Event Triggers
+
+| Category | Event | Achievement |
+|----------|-------|-------------|
+| Git | First commit | `first_commit` |
+| Git | First PR | `first_pr` |
+| Git | Bug fix | `first_bug_fix` |
+| Git | Release | `first_release` |
+| Agent | 1K tokens | `tokens_1k` |
+| Agent | 100K tokens | `tokens_100k` |
+| Agent | 1M tokens | `tokens_1m` |
+| Evolution | Stage 2 | `evolution_stage_2` |
+| Evolution | Stage 3 | `evolution_stage_3` |
+| Evolution | Stage 4 | `evolution_stage_4` |
+| Social | First bounty | `first_bounty` |
+| Social | 10 bounties | `bounties_10` |
+
+---
+
+## 9. Storage
 
 All data is stored locally (MVP). Data directory structure:
 

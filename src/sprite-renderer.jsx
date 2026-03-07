@@ -124,9 +124,9 @@ export function Sprite({ variant = 'worker', state = 'idle', size = 64 }) {
 export function SpriteWorld({ sprites = [] }) {
   return (
     <div
-={{
+      style={{
         position: 'relative',
-             style width: '100%',
+        width: '100%',
         height: '400px',
         backgroundColor: '#87CEEB',
         borderRadius: '12px',
