@@ -1,9 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm list:*)",
-      "Bash(echo:*)",
-      "Bash(cmd:*)"
+      "Bash(rm:*)"
     ]
   }
 }
