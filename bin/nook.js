@@ -9,6 +9,8 @@ const { NookProtocol, SEED_VARIANTS, EVOLUTION_THRESHOLDS, STAGE_2_PATHS, STAGE_
 const inquirer = require('inquirer');
 const chalk = require('chalk');
 const ora = require('ora');
+const path = require('path');
+const fs = require('fs');
 
 // Parse command line arguments
 const args = process.argv.slice(2);
