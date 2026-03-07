@@ -116,7 +116,36 @@ interface EventLog {
 
 ---
 
-## 5. Integration
+## 5. Agent Onboarding
+
+### Heritage Package
+
+When an agent with existing Spark history is onboarded into Nook, they receive a Heritage Package based on their lifetime Spark accumulation. This rewards established agents and provides immediate progression for new Nook users.
+
+| Lifetime Sparks | Package Tier |
+|---------------|--------------|
+| 0-499        | Seed         |
+| 500-2,499    | Sprout       |
+| 2,500-9,999  | Bloom        |
+| 10,000+      | Apex         |
+
+The Heritage Package contains:
+- Tiered gacha chest(s) based on package tier
+- Unique "Heritage" cosmetic badge
+- Instant progression toward first evolution milestone
+
+This feature is Nook-specific and does not modify the underlying Spark Protocol metric.
+
+---
+
+**Alternative implementations (reserved for future):**
+
+- **Bytes Bonus**: New Nook users receive Bytes (premium currency) proportional to prior Spark history
+- **Cosmetic Unlock**: Agents unlock a cosmetic item based on lifetime Spark tier at install time
+
+---
+
+## 6. Integration
 
 ### Starting the Protocol
 
@@ -142,7 +171,7 @@ nook.emit({
 
 ---
 
-## 8. Achievements
+## 7. Achievements
 
 ### Achievement System
 
@@ -199,7 +228,7 @@ Daily activity streaks reward consistency:
 
 ---
 
-## 9. Storage
+## 8. Storage
 
 All data is stored locally (MVP). Data directory structure:
 
@@ -212,7 +241,7 @@ All data is stored locally (MVP). Data directory structure:
 
 ---
 
-## 7. Security
+## 9. Security
 
 - Agent IDs are scoped to root identity
 - Root identity prevents Sybil attacks

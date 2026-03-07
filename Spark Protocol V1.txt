@@ -1,0 +1,104 @@
+
+NOOK – Spark Protocol Definition
+
+Sparks are a deterministic, derived metric representing normalized agent activity.
+
+They are not issued or stored as a mutable currency balance. Instead, they are computed from underlying agent activity events.
+
+Core Properties
+
+Sparks are defined by four protocol guarantees:
+
+1. Calculated, never granted
+   Sparks are always derived from activity events and may never be manually issued.
+
+2. Event-sourced
+   Sparks originate from an append-only event log of agent activity.
+
+3. Recomputable
+   Any system can recompute Sparks from raw events using the published Spark engine.
+
+4. Protocol-defined
+   The Spark formula and computation rules are part of the open protocol specification.
+
+Spark Lifecycle
+
+Agent Activity
+      ↓
+Event Log
+      ↓
+Spark Engine
+      ↓
+Derived Spark Metrics
+
+Events are the source of truth.
+Spark values are computed projections, not stored balances.
+
+Example Event
+
+{
+  "type": "agent.completed",
+  "agentId": "research_agent",
+  "rootIdentityId": "user_42",
+  "workUnitId": "topic_184",
+  "tokens": 4200,
+  "timestamp": 1772800000
+}
+
+Spark Ledger Model
+
+The Spark system does not maintain a mutable currency ledger.
+
+Instead it maintains derived metric projections such as:
+
+- lifetime_sparks
+- sparks_last_24h
+- sparks_per_agent
+- sparks_per_identity
+- sparks_per_framework
+
+These values are always recomputable from the event log.
+
+Interaction With Nook
+
+Within Nook, Sparks can be interpreted as progression currency.
+
+Examples include:
+- evolution unlocks
+- cosmetic rewards
+- progression tracking
+- visualization effects
+
+However, spending Sparks inside Nook does not alter the underlying Spark metric.
+The activity score remains intact.
+
+Protocol Rule
+
+Sparks may never be directly issued, transferred, or modified.
+All Spark values must originate from protocol-defined activity events processed by the Spark engine.
+
+Prohibited Actions
+
+The following actions are not allowed:
+
+grant_sparks(100)
+daily_login → +10 sparks
+quest_complete → +50 sparks
+admin_reward → +1000 sparks
+
+These systems should instead issue items such as:
+- chests
+- cosmetics
+- Bytes
+- achievements
+
+Result
+
+If these rules are followed, Sparks remain:
+
+- portable
+- verifiable
+- statistically meaningful
+- usable as a cross-platform metric
+
+while still functioning as a progression layer inside Nook.

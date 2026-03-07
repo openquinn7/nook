@@ -1,0 +1,512 @@
+
+NOOK – Event Protocol Specification v1.0
+
+Document Type: Protocol Specification
+Purpose: Define the canonical event schema that agent frameworks emit in order to integrate with Nook and support Spark computation, visualization, and analytics.
+
+--------------------------------------------------
+1. Overview
+--------------------------------------------------
+
+The Nook Event Protocol defines a portable, minimal, event-sourced interface for reporting AI agent activity.
+
+Its goals are:
+
+• provide a common integration surface across agent frameworks
+• power the Spark Engine
+• drive sprite visualization and state updates
+• enable recomputable analytics from raw events
+
+The event log is the source of truth.
+All downstream systems consume protocol events.
+
+--------------------------------------------------
+2. Design Principles
+--------------------------------------------------
+
+The Nook Event Protocol is designed to be:
+
+1. Minimal
+   Small enough for easy adoption.
+
+2. Portable
+   Usable across OpenClaw, Claude Code workflows, orchestration systems, agents, and future frameworks.
+
+3. Event-sourced
+   Events are append-only records of activity.
+
+4. Deterministic
+   The same event log should produce the same Spark outputs and visualization state.
+
+5. Extensible
+   Future fields may be added without breaking existing integrations.
+
+--------------------------------------------------
+3. Event Pipeline
+--------------------------------------------------
+
+The protocol flow is:
+
+Agent Runtime
+    ↓
+Nook Events
+    ↓
+Event Log
+    ↓
+Spark Engine
+    ↓
+Visualization / Analytics / Progression
+
+Events are written once.
+Sparks and state projections are derived later.
+
+--------------------------------------------------
+4. Required Event Fields
+--------------------------------------------------
+
+All Nook events must include the following envelope fields:
+
+{
+  "eventId": "string",
+  "eventVersion": "1.0",
+  "type": "string",
+  "timestamp": 1772800000,
+  "agentId": "string",
+  "rootIdentityId": "string",
+  "source": "string"
+}
+
+Field definitions:
+
+eventId
+Globally unique identifier for the event.
+
+eventVersion
+Protocol schema version. For this spec: "1.0"
+
+type
+Event type identifier.
+
+timestamp
+Unix timestamp in seconds or milliseconds, consistently used by the integration.
+
+agentId
+Unique identifier for the specific agent instance.
+
+rootIdentityId
+Unique identifier for the root identity that owns or controls the agent fleet.
+
+source
+Originating framework or runtime.
+Examples:
+- openclaw
+- crewai
+- autogen
+- local-runtime
+- custom
+
+--------------------------------------------------
+5. Optional Shared Fields
+--------------------------------------------------
+
+These fields may be included when relevant:
+
+workUnitId
+Logical task context identifier. This is the canonical event-level identifier used by the Spark Engine to derive task diversity metrics such as distinct_work_units.
+Examples:
+- repo_issue_22
+- workflow_run_88
+- convo_191
+- dataset_job_7
+
+sessionId
+Identifier for a runtime session.
+
+parentAgentId
+Identifier for the parent agent if this agent was spawned by another.
+
+tokens
+Total tokens associated with the event.
+
+model
+Model name used for the activity.
+Examples:
+- gpt-5
+- claude-sonnet
+- minimax
+- deepseek-chat
+
+provider
+Provider used for the model call.
+Examples:
+- openai
+- anthropic
+- minimax
+- deepseek
+- local
+
+metadata
+Arbitrary JSON object for framework-specific context.
+
+--------------------------------------------------
+6. Canonical Event Types
+--------------------------------------------------
+
+The following event types form the Nook Event Protocol v1.0 core set.
+
+6.1 agent.started
+
+Definition:
+The agent has begun work on a task or entered an active working state.
+
+Example:
+{
+  "eventId": "evt_001",
+  "eventVersion": "1.0",
+  "type": "agent.started",
+  "timestamp": 1772800000,
+  "agentId": "builder_01",
+  "rootIdentityId": "user_42",
+  "source": "openclaw",
+  "workUnitId": "repo_issue_22",
+  "sessionId": "sess_88"
+}
+
+Uses:
+• visualization state change to working
+• task lifecycle tracking
+
+--------------------------------------------------
+6.2 agent.completed
+
+Definition:
+The agent completed a work unit.
+
+Example:
+{
+  "eventId": "evt_002",
+  "eventVersion": "1.0",
+  "type": "agent.completed",
+  "timestamp": 1772800300,
+  "agentId": "builder_01",
+  "rootIdentityId": "user_42",
+  "source": "openclaw",
+  "workUnitId": "repo_issue_22",
+  "tokens": 4200,
+  "provider": "anthropic",
+  "model": "claude-sonnet"
+}
+
+Uses:
+• Spark computation
+• visualization success animation
+• productivity analytics
+
+--------------------------------------------------
+6.3 agent.failed
+
+Definition:
+The agent failed to complete a work unit or entered an error state.
+
+Example:
+{
+  "eventId": "evt_003",
+  "eventVersion": "1.0",
+  "type": "agent.failed",
+  "timestamp": 1772800400,
+  "agentId": "builder_01",
+  "rootIdentityId": "user_42",
+  "source": "openclaw",
+  "workUnitId": "repo_issue_22",
+  "metadata": {
+    "reason": "timeout"
+  }
+}
+
+Uses:
+• visualization error / confused state
+• failure analytics
+• operational observability
+
+--------------------------------------------------
+6.4 agent.idle
+
+Definition:
+The agent is not actively working and has entered an idle state.
+
+Example:
+{
+  "eventId": "evt_004",
+  "eventVersion": "1.0",
+  "type": "agent.idle",
+  "timestamp": 1772800500,
+  "agentId": "builder_01",
+  "rootIdentityId": "user_42",
+  "source": "openclaw"
+}
+
+Uses:
+• visualization idle state
+• lifecycle transitions
+
+--------------------------------------------------
+6.5 agent.state
+
+Definition:
+A generalized state update event.
+
+Required additional field:
+state
+
+Allowed states in v1.0:
+- working
+- idle
+- sleeping
+- queued
+- success
+- failure
+- offline
+
+Example:
+{
+  "eventId": "evt_005",
+  "eventVersion": "1.0",
+  "type": "agent.state",
+  "timestamp": 1772800600,
+  "agentId": "builder_01",
+  "rootIdentityId": "user_42",
+  "source": "openclaw",
+  "state": "working"
+}
+
+Uses:
+• direct sprite state control
+• state synchronization across surfaces
+
+--------------------------------------------------
+7. Spark-Relevant Event Rule
+--------------------------------------------------
+
+Only protocol-defined activity events may contribute to Spark computation.
+
+In Event Protocol v1.0, only agent.completed events are Spark-relevant by default.
+
+- agent.completed → eligible for Spark computation
+- agent.failed → 0 Sparks
+- agent.started → 0 Sparks
+- agent.idle → 0 Sparks
+- agent.state → 0 Sparks unless later explicitly upgraded in future versions
+
+Optional future versions may support additional Spark-relevant event types.
+
+No system may directly grant Sparks outside event processing.
+
+--------------------------------------------------
+8. Work Unit Semantics
+--------------------------------------------------
+
+The workUnitId field is critical for Spark diversity calculations.
+
+workUnitId is the event-level identifier used by the Spark Engine to compute distinct_work_units, which is the number of unique logical work contexts observed within the Spark calculation window.
+
+Requirements:
+
+• must be stable for the logical task context
+• should not change arbitrarily during the same unit of work
+• should not be fabricated solely to inflate diversity
+
+Good examples:
+- one repo issue
+- one workflow execution
+- one user conversation
+- one research topic
+
+Poor examples:
+- random UUID every prompt
+- synthetic IDs per token batch
+- IDs generated only to inflate Spark output
+
+--------------------------------------------------
+9. Root Identity Semantics
+--------------------------------------------------
+
+The rootIdentityId groups all agents that belong to one owner or top-level system identity.
+
+Examples:
+- a Nook account ID
+- an OpenClaw user identity
+- a wallet ID
+- an OAuth user ID
+
+Purpose:
+• aggregate activity across agent fleets
+• prevent Sybil amplification
+• anchor rate limits and Spark compression
+
+--------------------------------------------------
+10. Ordering, Idempotency, and Error Handling
+--------------------------------------------------
+
+Integrations should satisfy the following:
+
+Ordering
+Events should be emitted in chronological order when possible.
+
+Idempotency
+If duplicate delivery occurs, eventId must allow deduplication.
+
+Rule:
+The same eventId must never represent two different events.
+
+Error Handling
+
+Missing timestamp:
+- Events without a timestamp field must be rejected.
+- The event log must not accept events with missing timestamp.
+
+Out-of-order events:
+- Events with timestamps significantly in the past (beyond the calculation window) should be accepted but may not contribute to current Spark calculations.
+- Events with future timestamps should be accepted but buffered until the timestamp is reached.
+- The system should log a warning for events received out of expected order by more than 60 seconds.
+
+Required fields validation:
+- eventId: Required. Events without a valid eventId must be rejected.
+- eventVersion: Required. Must match supported versions or be rejected.
+- type: Required. Must be a canonical event type or be rejected.
+- agentId: Required. Events without agentId must be rejected.
+- rootIdentityId: Required. Events without rootIdentityId must be rejected.
+
+--------------------------------------------------
+11. Storage Model
+--------------------------------------------------
+
+The protocol assumes an append-only event log.
+
+Example event log record:
+
+{
+  "eventId": "evt_002",
+  "eventVersion": "1.0",
+  "type": "agent.completed",
+  "timestamp": 1772800300,
+  "agentId": "builder_01",
+  "rootIdentityId": "user_42",
+  "source": "openclaw",
+  "workUnitId": "repo_issue_22",
+  "tokens": 4200,
+  "provider": "anthropic",
+  "model": "claude-sonnet"
+}
+
+Derived systems should not mutate historical events.
+
+Corrections should be represented by new events or external reconciliation logic.
+
+--------------------------------------------------
+12. Minimal TypeScript Reference
+--------------------------------------------------
+
+type NookEventBase = {
+  eventId: string;
+  eventVersion: "1.0";
+  type: string;
+  timestamp: number;
+  agentId: string;
+  rootIdentityId: string;
+  source: string;
+  workUnitId?: string;
+  sessionId?: string;
+  parentAgentId?: string;
+  tokens?: number;
+  model?: string;
+  provider?: string;
+  metadata?: Record<string, unknown>;
+};
+
+type AgentStartedEvent = NookEventBase & {
+  type: "agent.started";
+};
+
+type AgentCompletedEvent = NookEventBase & {
+  type: "agent.completed";
+};
+
+type AgentFailedEvent = NookEventBase & {
+  type: "agent.failed";
+};
+
+type AgentIdleEvent = NookEventBase & {
+  type: "agent.idle";
+};
+
+type AgentStateEvent = NookEventBase & {
+  type: "agent.state";
+  state: "working" | "idle" | "sleeping" | "queued" | "success" | "failure" | "offline";
+};
+
+type NookEvent =
+  | AgentStartedEvent
+  | AgentCompletedEvent
+  | AgentFailedEvent
+  | AgentIdleEvent
+  | AgentStateEvent;
+
+--------------------------------------------------
+13. Visualization Mapping
+--------------------------------------------------
+
+Recommended sprite mappings:
+
+agent.started
+→ enter working state
+
+agent.completed
+→ success animation + spark burst
+
+agent.failed
+→ failure / confused animation
+
+agent.idle
+→ idle / wandering animation
+
+agent.state
+→ explicit visual override
+
+--------------------------------------------------
+14. Compliance Requirements
+--------------------------------------------------
+
+A framework is considered Nook Event Protocol v1.0 compliant if it:
+
+1. emits events with the required envelope fields
+2. uses canonical event types correctly
+3. provides stable rootIdentityId values
+4. provides non-abusive workUnitId values when applicable
+5. supports deduplication via eventId
+
+--------------------------------------------------
+15. Future Extensions
+--------------------------------------------------
+
+Future versions may add:
+
+• agent.spawned
+• agent.cancelled
+• workflow.started
+• workflow.completed
+• external.effect
+• token.batch
+• richer failure reasons
+• signed event attestations
+
+These extensions must preserve backward compatibility or introduce a new eventVersion.
+
+--------------------------------------------------
+16. Design Principle
+--------------------------------------------------
+
+The Nook Event Protocol exists to make agent activity portable, visible, and measurable.
+
+The protocol should stay small, boring, and easy to adopt.
+
+That simplicity is what allows Sparks and Nook itself to spread across agent ecosystems.

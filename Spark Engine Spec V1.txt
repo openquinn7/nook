@@ -1,0 +1,271 @@
+
+NOOK – Spark Engine Specification v1.0
+
+Document Type: Protocol Specification
+Purpose: Define the deterministic computation rules for generating Sparks from agent activity events.
+
+--------------------------------------------------
+1. Overview
+--------------------------------------------------
+
+The Spark Engine is responsible for converting agent activity events into a derived metric called Sparks.
+
+Sparks represent normalized agent activity and are used for:
+
+• progression signals inside Nook
+• ecosystem analytics
+• agent productivity measurement
+• visualization triggers
+
+The Spark Engine is deterministic and recomputable from raw activity events.
+
+--------------------------------------------------
+2. Core Principles
+--------------------------------------------------
+
+The Spark Engine follows four protocol guarantees:
+
+1. Sparks are calculated, never granted
+2. Sparks are derived from event logs
+3. Sparks can be recomputed from raw events
+4. Spark calculations are defined by the open protocol
+
+No system may directly modify Spark values.
+
+--------------------------------------------------
+3. Input Event Requirements
+--------------------------------------------------
+
+Each Spark computation is derived from agent activity events.
+
+Minimum required fields:
+
+{
+  "type": "agent.completed",
+  "agentId": "string",
+  "rootIdentityId": "string",
+  "workUnitId": "string",
+  "tokens": number,
+  "timestamp": number
+}
+
+Field definitions:
+
+type
+Event category describing agent lifecycle activity.
+
+agentId
+Unique identifier for the specific agent instance.
+
+rootIdentityId
+Identifier for the root owner of the agent fleet.
+
+workUnitId
+Identifier for the logical work context.
+
+tokens
+Total tokens processed by the model during the work unit.
+
+timestamp
+Unix timestamp of the event.
+
+--------------------------------------------------
+4. Spark Calculation Formula
+--------------------------------------------------
+
+The Spark Engine converts token activity into Sparks using a compressed formula.
+
+Base formula:
+
+Sparks = K * sqrt(tokens / 1000) * log(distinct_work_units + 1)
+
+Where:
+
+tokens
+Total tokens processed in the window.
+
+distinct_work_units
+Computed as the number of unique workUnitId values present across Spark-relevant events within the active calculation window (e.g., rolling 24-hour window).
+
+sqrt()
+Compute compression to reduce large-scale farming advantage.
+
+log()
+Rewards breadth of task diversity.
+
+K
+Normalization constant used to tune progression pacing.
+
+Recommended initial value:
+
+K = 1
+
+This value may be adjusted in future Spark Engine versions.
+
+--------------------------------------------------
+5. Calculation Window
+--------------------------------------------------
+
+Spark computation occurs within a rolling time window.
+
+Default window:
+
+24-hour rolling window
+
+Spark Engine aggregates:
+
+tokens_last_24h
+distinct_work_units_last_24h
+
+distinct_work_units is defined as the number of unique workUnitId values observed across Spark-relevant events within the active Spark calculation window. In Spark Engine v1.0, Spark-relevant events are limited to agent.completed events unless otherwise specified.
+
+Spark contributions are recalculated continuously as events arrive.
+
+--------------------------------------------------
+6. Identity Aggregation
+--------------------------------------------------
+
+All Spark calculations occur at the root identity level.
+
+Structure:
+
+Root Identity
+   ↓
+Agent Fleet
+   ↓
+Work Units
+   ↓
+Token Activity
+
+Token activity across all agents belonging to the same root identity is aggregated before Spark computation.
+
+This prevents Sybil attacks from spawning multiple agents.
+
+--------------------------------------------------
+7. Failure Handling
+--------------------------------------------------
+
+In Spark Engine v1.0, agent.failed events contribute 0 Sparks. Failed work may be tracked for analytics and visualization, but it does not increase Spark output. This preserves Spark meaning as a measure of completed activity rather than attempted activity.
+
+--------------------------------------------------
+8. Rate Limiting
+--------------------------------------------------
+
+The Spark Engine applies rate limits to maintain stable metric behavior.
+
+Recommended defaults:
+
+Hourly Cap:
+50 Sparks per root identity
+
+Daily Cap:
+300 Sparks per root identity
+
+Rate limiting occurs after Spark calculation.
+
+--------------------------------------------------
+9. Duplicate Work Suppression
+--------------------------------------------------
+
+To prevent loop farming, repeated work units are suppressed using a deterministic multiplier applied to each workUnitId's Spark contribution.
+
+For each unique workUnitId within the calculation window:
+
+| Occurrences | Multiplier |
+|-------------|------------|
+| 1-10       | 100%       |
+| 11-20      | 75%        |
+| 21-50      | 50%        |
+| 51+        | 25%        |
+
+The multiplier is applied to that specific workUnitId's Spark output before aggregation. This ensures that while diversity is rewarded, repeated execution of the same logical work does not linearly increase Spark output.
+
+--------------------------------------------------
+10. Spark Ledger Model
+--------------------------------------------------
+
+Sparks are not stored as mutable balances.
+
+Instead the system stores derived projections:
+
+lifetime_sparks
+sparks_last_24h
+sparks_last_7d
+sparks_per_agent
+sparks_per_identity
+
+These projections must always be recomputable from raw events.
+
+--------------------------------------------------
+11. Versioning
+--------------------------------------------------
+
+Spark calculation rules must be versioned.
+
+Example:
+
+Spark Engine v1.0
+
+If formula changes occur, a new version must be defined:
+
+Spark Engine v1.1
+
+Historical data remains associated with the original engine version.
+
+--------------------------------------------------
+12. Deterministic Guarantee
+--------------------------------------------------
+
+Given identical event logs and the same Spark Engine version,
+any independent implementation must compute identical Spark outputs.
+
+This guarantees portability and metric integrity.
+
+--------------------------------------------------
+13. Protocol Compliance Rule
+--------------------------------------------------
+
+Systems integrating with the Spark protocol must follow this rule:
+
+"Sparks may never be directly issued, transferred, or modified.
+All Spark values must originate from protocol-defined activity events
+processed by the Spark Engine."
+
+--------------------------------------------------
+14. Example Calculation
+--------------------------------------------------
+
+Example input:
+
+tokens_last_24h = 100000
+distinct_work_units = 10
+
+Calculation:
+
+sqrt(100000 / 1000) = sqrt(100) = 10
+log(10 + 1) ≈ 2.39
+
+Spark output:
+
+Sparks ≈ 23.9
+
+--------------------------------------------------
+15. Future Extensions
+--------------------------------------------------
+
+Future versions of the Spark Engine may introduce:
+
+• task weighting
+• agent capability normalization
+• model efficiency adjustments
+• dynamic compression tuning
+
+These must always preserve recomputability.
+
+--------------------------------------------------
+16. Design Principle
+--------------------------------------------------
+
+The Spark Engine measures activity, not rewards.
+
+It is designed to produce a stable, portable metric representing normalized AI agent work.
