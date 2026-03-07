@@ -83,9 +83,15 @@ class SparkEngine {
   verifyChain() {
     let prevHash = null;
     for (const record of this.events) {
-      const computed = this.computeEventHash(record.event);
+      // Re-hash using stored previousHash
+      const data = JSON.stringify({
+        ...record.event,
+        previousHash: record.previousHash
+      });
+      const computed = crypto.createHash('sha256').update(data).digest('hex');
+
       if (record.hash !== computed) {
-        return { valid: false, brokenAt: record.id };
+        return { valid: false, brokenAt: record.id, expected: computed, got: record.hash };
       }
       prevHash = record.hash;
     }
@@ -407,6 +413,11 @@ class SparkEngine {
       if (data.events && Array.isArray(data.events)) {
         this.events = data.events;
         this.lifetimeSparks = this.events.reduce((sum, e) => sum + (e.sparks || 0), 0);
+        // Restore lastEventHash from loaded events
+        if (this.events.length > 0) {
+          const lastEvent = this.events[this.events.length - 1];
+          this.lastEventHash = lastEvent.hash || lastEvent.previousHash || null;
+        }
         return this.events.length;
       }
     } catch (e) {

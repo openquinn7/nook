@@ -5,7 +5,7 @@
  */
 
 const { SparkEngine, VERIFICATION_LEVELS } = require('./src/spark-engine');
-const { EventProtocol, validateEvent, createEvent } = require('./src/event-protocol');
+const { EventProtocolParser, createEvent } = require('./src/event-protocol');
 const fs = require('fs');
 const path = require('path');
 
@@ -20,7 +20,6 @@ class NookProtocol {
 
     // Core protocol systems only
     this.sparkEngine = new SparkEngine();
-    this.eventProtocol = new EventProtocol();
 
     // Ensure storage directory exists
     this.ensureStorageDir();
@@ -76,7 +75,7 @@ class NookProtocol {
     if (!event.agentId) event.agentId = this.agentId;
     if (!event.rootIdentityId) event.rootIdentityId = this.rootIdentity;
     if (!event.timestamp) event.timestamp = Date.now();
-    if (!event.eventId) event.eventId = this.eventProtocol.generateEventId();
+    if (!event.eventId) event.eventId = 'evt_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
     if (!event.eventVersion) event.eventVersion = '1.0';
     if (!event.verification) event.verification = VERIFICATION_LEVELS.OUTPUT;
 
@@ -144,7 +143,5 @@ module.exports = {
   NookProtocol,
   VERIFICATION_LEVELS,
   SparkEngine,
-  EventProtocol,
-  validateEvent,
   createEvent
 };
