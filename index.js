@@ -47,6 +47,9 @@ class NookProtocol {
 
     // Ensure storage directory exists
     this.ensureStorageDir();
+
+    // Load events from storage (for persistence)
+    this.loadEvents();
   }
 
   /**
@@ -110,6 +113,24 @@ class NookProtocol {
   }
 
   /**
+   * Save events to storage (for persistence)
+   * Per spec: Events are immutable, store raw events
+   */
+  saveEvents() {
+    const eventsPath = this.getEventsPath();
+    return this.sparkEngine.saveEvents(eventsPath);
+  }
+
+  /**
+   * Load events from storage (for persistence)
+   * Per spec: Sparks are recomputed from raw events
+   */
+  loadEvents() {
+    const eventsPath = this.getEventsPath();
+    return this.sparkEngine.loadEvents(eventsPath);
+  }
+
+  /**
    * Initialize a new sprite (onboarding)
    */
   init(variant = 'worker') {
@@ -165,6 +186,7 @@ class NookProtocol {
 
     // Save progress
     this.saveProfile();
+    this.saveEvents();
 
     // Fire hooks
     this._fireHooks(event, result);
