@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nook Dashboard - Live</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a24;
+      --bg-card-hover: #222230;
+      --accent: #00d4aa;
+      --accent-dim: #00a88a;
+      --accent-glow: rgba(0, 212, 170, 0.3);
+      --text-primary: #ffffff;
+      --text-secondary: #8888aa;
+      --text-dim: #555566;
+      --spark-color: #ffd93d;
+      --spark-glow: rgba(255, 217, 61, 0.4);
+      --success: #4ade80;
+      --warning: #fbbf24;
+      --error: #f87171;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(0, 212, 170, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(255, 217, 61, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      font-size: 32px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .logo h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Main grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(255,255,255,0.08);
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Spark counter - hero section */
+    .spark-hero {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(0, 212, 170, 0.1) 100%);
+      border: 1px solid rgba(0, 212, 170, 0.2);
+      text-align: center;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .spark-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
+      animation: rotate 20s linear infinite;
+      opacity: 0.5;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .spark-hero .card-title {
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .spark-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 80px;
+      font-weight: 700;
+      color: var(--spark-color);
+      text-shadow: 0 0 40px var(--spark-glow);
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.2s ease;
+    }
+
+    .spark-count.updated {
+      transform: scale(1.05);
+    }
+
+    .spark-label {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .spark-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 16px;
+      padding: 6px 12px;
+      background: rgba(0, 212, 170, 0.15);
+      border-radius: 12px;
+      font-size: 14px;
+      color: var(--accent);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .stats-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Activity feed */
+    .activity-feed {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .activity-feed::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .activity-feed::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+    }
+
+    .activity-feed::-webkit-scrollbar-thumb {
+      background: var(--text-dim);
+      border-radius: 2px;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: var(--bg-secondary);
+      transition: all 0.2s ease;
+    }
+
+    .activity-item:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .activity-item.new {
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .activity-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .activity-icon.success {
+      background: rgba(74, 222, 128, 0.15);
+    }
+
+    .activity-icon.failed {
+      background: rgba(248, 113, 113, 0.15);
+    }
+
+    .activity-icon.started {
+      background: rgba(0, 212, 170, 0.15);
+    }
+
+    .activity-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .activity-title {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .activity-meta {
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 8px;
+    }
+
+    .activity-sparks {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--spark-color);
+      white-space: nowrap;
+    }
+
+    /* Agent state */
+    .agent-state {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .state-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+    }
+
+    .state-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .state-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .empty-text {
+      font-size: 14px;
+    }
+
+    /* No sprite state */
+    .no-sprite {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--bg-card);
+      border-radius: 16px;
+      border: 2px dashed rgba(255,255,255,0.1);
+    }
+
+    .no-sprite h2 {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .no-sprite p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .no-sprite code {
+      background: var(--bg-secondary);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--accent);
+    }
+
+    /* Last updated */
+    .last-updated {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      color: var(--text-dim);
+      font-size: 12px;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <span class="logo-icon">🌱</span>
+        <h1>Nook<span>.live</span></h1>
+      </div>
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        <span>Live</span>
+      </div>
+    </header>
+
+    <div id="app">
+      <div class="dashboard-grid">
+        <!-- Spark Hero -->
+        <div class="card spark-hero">
+          <div class="card-title">⚡ Total Sparks</div>
+          <div class="spark-count" id="sparkCount">0</div>
+          <div class="spark-label">accumulated energy</div>
+          <div class="spark-change" id="sparkChange">
+            <span>+0</span> this session
+          </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row" style="grid-column: 1 / -1;">
+          <div class="card stat-card">
+            <div class="stat-value" id="totalEvents">0</div>
+            <div class="stat-label">Events</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-value" id="todaySparks">0</div>
+            <div class="stat-label">Today</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-value" id="hourSparks">0</div>
+            <div class="stat-label">This Hour</div>
+          </div>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="card">
+          <div class="card-title">📡 Live Activity</div>
+          <div class="activity-feed" id="activityFeed">
+            <div class="empty-state">
+              <div class="empty-icon">⏳</div>
+              <div class="empty-text">Waiting for activity...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agent Info -->
+        <div class="card">
+          <div class="card-title">🤖 Agent Status</div>
+          <div class="agent-state" id="agentState">
+            <div class="state-item">
+              <span class="state-label">Variant</span>
+              <span class="state-value" id="variant">—</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">Stage</span>
+              <span class="state-value" id="stage">—</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">Path</span>
+              <span class="state-value" id="path">—</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">Status</span>
+              <span class="state-value" id="status">idle</span>
+            </div>
+            <div class="state-item">
+              <span class="state-label">Last Event</span>
+              <span class="state-value" id="lastEvent">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- No sprite message -->
+        <div class="no-sprite" id="noSprite" style="display: none;">
+          <h2>No Sprite Found</h2>
+          <p>Initialize your sprite to start earning sparks</p>
+          <code>npx nook init</code>
+        </div>
+      </div>
+
+      <div class="last-updated" id="lastUpdated">
+        Last updated: —
+      </div>
+    </div>
+
+    <footer>
+      Powered by <a href="https://github.com/openquinn7/nook" target="_blank">Nook Protocol</a>
+    </footer>
+  </div>
+
+  <script>
+    // Dashboard state
+    let lastSparkCount = 0;
+    let sessionSparks = 0;
+    let lastEventCount = 0;
+    let knownEventIds = new Set();
+
+    // Get Nook data path (default to ~/.nook)
+    function getNookPath() {
+      // In production, this would be configurable
+      // For now, we'll fetch from a local API or use file fetch
+      return null; // Will use default
+    }
+
+    // Fetch data from local Nook files
+    async function fetchNookData() {
+      try {
+        // Try to fetch from local API first (if running)
+        const response = await fetch('/api/nook-data', {
+          headers: { 'Cache-Control': 'no-cache' }
+        });
+        if (response.ok) {
+          return await response.json();
+        }
+      } catch (e) {
+        // API not available, try file-based approach
+      }
+
+      // Fallback: try to load via fetch from file system
+      // In browser, we can't directly read files, so this needs a local server
+      // For demo, we'll simulate data
+      return simulateData();
+    }
+
+    // Simulate data for demo (when no real data available)
+    function simulateData() {
+      return {
+        profile: null,
+        events: { events: [] },
+        hasData: false
+      };
+    }
+
+    // Actually fetch from local JSON files via fetch
+    async function loadFromFiles() {
+      const basePath = 'file:///' + (process.env.HOME || process.env.USERPROFILE) + '/.nook/';
+
+      try {
+        const [profileRes, eventsRes] = await Promise.all([
+          fetch(basePath + 'profile.json', { cache: 'no-cache' }),
+          fetch(basePath + 'events.json', { cache: 'no-cache' })
+        ]);
+
+        const profile = profileRes.ok ? await profileRes.json() : null;
+        const events = eventsRes.ok ? await eventsRes.json() : { events: [] };
+
+        return { profile, events, hasData: profile !== null };
+      } catch (e) {
+        console.log('Could not load from files:', e.message);
+        return simulateData();
+      }
+    }
+
+    // Format relative time
+    function formatRelativeTime(timestamp) {
+      const seconds = Math.floor((Date.now() - timestamp) / 1000);
+
+      if (seconds < 60) return 'just now';
+      if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+      if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+      return Math.floor(seconds / 86400) + 'd ago';
+    }
+
+    // Format time
+    function formatTime(timestamp) {
+      return new Date(timestamp).toLocaleTimeString();
+    }
+
+    // Update spark count with animation
+    function updateSparkCount(count) {
+      const el = document.getElementById('sparkCount');
+      if (count !== lastSparkCount) {
+        const diff = count - lastSparkCount;
+        sessionSparks += diff;
+        lastSparkCount = count;
+
+        el.textContent = count.toLocaleString();
+        el.classList.add('updated');
+        setTimeout(() => el.classList.remove('updated'), 200);
+
+        // Update session change
+        document.getElementById('sparkChange').innerHTML =
+          `<span>+${sessionSparks}</span> this session`;
+      }
+    }
+
+    // Update activity feed
+    function updateActivityFeed(events) {
+      const feed = document.getElementById('activityFeed');
+
+      // Get last 20 events
+      const recentEvents = events.slice(-20).reverse();
+
+      if (recentEvents.length === 0) {
+        feed.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">⏳</div>
+            <div class="empty-text">Waiting for activity...</div>
+          </div>
+        `;
+        return;
+      }
+
+      // Check for new events
+      let hasNew = false;
+      const html = recentEvents.map(e => {
+        const isNew = !knownEventIds.has(e.event.eventId);
+        if (isNew) {
+          knownEventIds.add(e.event.eventId);
+          hasNew = true;
+        }
+
+        const iconClass = e.event.success ? 'success' : (e.event.type === 'agent.started' ? 'started' : 'failed');
+        const icon = e.event.success ? '✓' : (e.event.type === 'agent.started' ? '→' : '✕');
+
+        const workUnit = e.event.workUnitId || 'unknown';
+        const tokens = e.event.tokens || 0;
+
+        return `
+          <div class="activity-item ${isNew ? 'new' : ''}">
+            <div class="activity-icon ${iconClass}">${icon}</div>
+            <div class="activity-content">
+              <div class="activity-title">${workUnit}</div>
+              <div class="activity-meta">
+                <span>${tokens.toLocaleString()} tokens</span>
+                <span>${formatRelativeTime(e.timestamp)}</span>
+              </div>
+            </div>
+            <div class="activity-sparks">+${e.sparks}</div>
+          </div>
+        `;
+      }).join('');
+
+      feed.innerHTML = html;
+    }
+
+    // Update stats
+    function updateStats(events) {
+      const now = Date.now();
+      const hourStart = now - 3600000;
+      const dayStart = now - 86400000;
+
+      const totalEvents = events.length;
+      const todaySparks = events
+        .filter(e => e.timestamp >= dayStart)
+        .reduce((sum, e) => sum + (e.sparks || 0), 0);
+      const hourSparks = events
+        .filter(e => e.timestamp >= hourStart)
+        .reduce((sum, e) => sum + (e.sparks || 0), 0);
+
+      // Update if changed
+      if (totalEvents !== lastEventCount) {
+        lastEventCount = totalEvents;
+        document.getElementById('totalEvents').textContent = totalEvents.toLocaleString();
+      }
+      document.getElementById('todaySparks').textContent = todaySparks;
+      document.getElementById('hourSparks').textContent = hourSparks;
+    }
+
+    // Update agent state
+    function updateAgentState(profile, events) {
+      if (!profile) {
+        document.getElementById('noSprite').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('noSprite').style.display = 'none';
+      document.getElementById('variant').textContent = profile.variant || '—';
+      document.getElementById('stage').textContent = profile.stage || '1';
+      document.getElementById('path').textContent = profile.path || '—';
+
+      // Check last event for status
+      const lastEvent = events.events[events.events.length - 1];
+      if (lastEvent) {
+        const status = lastEvent.event.type === 'agent.completed' ? 'completed' :
+                      lastEvent.event.type === 'agent.started' ? 'working' : 'idle';
+        document.getElementById('status').textContent = status;
+        document.getElementById('lastEvent').textContent = formatRelativeTime(lastEvent.timestamp);
+      }
+    }
+
+    // Main update loop
+    async function updateDashboard() {
+      const data = await fetchNookData();
+
+      if (!data.hasData) {
+        // Try file-based loading
+        const fileData = await loadFromFiles();
+        if (fileData.hasData) {
+          data.profile = fileData.profile;
+          data.events = fileData.events;
+          data.hasData = true;
+        }
+      }
+
+      const events = data.events?.events || [];
+
+      updateSparkCount(events.reduce((sum, e) => sum + (e.sparks || 0), 0));
+      updateActivityFeed(events);
+      updateStats(events);
+      updateAgentState(data.profile, events);
+
+      document.getElementById('lastUpdated').textContent =
+        'Last updated: ' + new Date().toLocaleTimeString();
+    }
+
+    // Demo mode - simulate activity
+    function startDemoMode() {
+      // Create demo events for visualization
+      const demoEvents = [];
+      let sparkCount = 0;
+
+      // Generate some demo history
+      for (let i = 0; i < 15; i++) {
+        const tokens = Math.floor(Math.random() * 5000) + 500;
+        const sparks = Math.floor(tokens / 10000);
+        sparkCount += sparks;
+
+        demoEvents.push({
+          event: {
+            eventId: `demo-${i}`,
+            type: Math.random() > 0.1 ? 'agent.completed' : 'agent.started',
+            workUnitId: `task-${i}`,
+            tokens: tokens,
+            success: Math.random() > 0.1
+          },
+          sparks: sparks,
+          timestamp: Date.now() - (i * 60000)
+        });
+      }
+
+      // Add to display
+      knownEventIds = new Set(demoEvents.map(e => e.event.eventId));
+      updateSparkCount(sparkCount);
+      updateActivityFeed(demoEvents);
+      updateStats(demoEvents);
+
+      // Demo agent state
+      document.getElementById('variant').textContent = 'worker';
+      document.getElementById('stage').textContent = '2';
+      document.getElementById('path').textContent = 'builder';
+      document.getElementById('status').textContent = 'active';
+      document.getElementById('lastEvent').textContent = 'just now';
+      document.getElementById('noSprite').style.display = 'none';
+
+      document.getElementById('lastUpdated').textContent =
+        'Demo mode - run `nook work 1000` to see real activity';
+    }
+
+    // Initialize
+    async function init() {
+      // Try to load real data first
+      await updateDashboard();
+
+      // If no data, show demo
+      if (!lastEventCount) {
+        startDemoMode();
+      }
+
+      // Poll every 2 seconds
+      setInterval(updateDashboard, 2000);
+    }
+
+    // Check if we're in Electron (desktop app)
+    if (typeof window.electron !== 'undefined') {
+      // Desktop app - use IPC
+      window.electron.onNookData((data) => {
+        const events = data.events?.events || [];
+        updateSparkCount(events.reduce((sum, e) => sum + (e.sparks || 0), 0));
+        updateActivityFeed(events);
+        updateStats(events);
+        updateAgentState(data.profile, events);
+      });
+    } else {
+      // Browser - start initialization
+      init();
+    }
+  </script>
+</body>
+</html>

@@ -11,7 +11,8 @@
   "scripts": {
     "build": "node build.js",
     "test": "node test.js",
-    "start": "node bin/nook.js"
+    "start": "node bin/nook.js",
+    "dashboard": "node bin/nook-dashboard.js"
   },
   "keywords": [
     "ai",
