@@ -95,6 +95,30 @@
       seed: { name: 'Seed', color: '#E8D5B7', description: 'Just starting out', traits: ['new', 'growing', 'potential'] }
     };
 
+    // Stage 2 paths (chosen at Sprout evolution)
+    const STAGE_2_PATHS = {
+      worker: {
+        builder: { name: 'Builder', description: 'Construction & implementation', statBonus: 'Speed +20%' },
+        autonomous: { name: 'Autonomous', description: 'Automation & efficiency', statBonus: 'Stamina +20%' }
+      },
+      explorer: {
+        scout: { name: 'Scout', description: 'Discovery & exploration', statBonus: 'Luck +20%' },
+        investigator: { name: 'Investigator', description: 'Analysis & research', statBonus: 'Speed +10%, Luck +10%' }
+      },
+      scholar: {
+        analyst: { name: 'Analyst', description: 'Data & patterns', statBonus: 'Luck +20%' },
+        planner: { name: 'Planner', description: 'Strategy & roadmaps', statBonus: 'Speed +10%, Stamina +10%' }
+      }
+    };
+
+    // Evolution thresholds
+    const EVOLUTION_THRESHOLDS = {
+      1: { sparks: 0, name: 'Seed' },
+      2: { sparks: 500, name: 'Sprout' },
+      3: { sparks: 2500, name: 'Bloom' },
+      4: { sparks: 10000, name: 'Apex' }
+    };
+
     const SPRITE_STATES = ['idle', 'working', 'success', 'failure', 'sleeping'];
 
     // SVG Sprite component
@@ -503,6 +527,81 @@
                   <div style={{ marginTop: '12px', fontWeight: 'bold', color: v.color }}>{v.name}</div>
                   <div style={{ fontSize: '10px', color: '#7f8c8d', marginTop: '4px' }}>Stage 1 - Seed</div>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Evolution 2 Mockup - Sprout Stage */}
+          <div style={{ marginBottom: '30px', backgroundColor: '#16213e', borderRadius: '12px', padding: '24px' }}>
+            <h2 style={{ fontSize: '16px', color: '#82E0AA', marginBottom: '8px', textAlign: 'center' }}>🌿 Evolution 2: Sprout Stage</h2>
+            <p style={{ fontSize: '12px', color: '#7f8c8d', textAlign: 'center', marginBottom: '20px' }}>At 500 sparks, your Seed evolves into a Sprout and chooses a path</p>
+
+            {/* Current progress */}
+            <div style={{ backgroundColor: '#0f172a', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span style={{ color: '#7f8c8d' }}>Current Sparks</span>
+                <span style={{ color: '#f39c12' }}>⚡ 487 / 500</span>
+              </div>
+              <div style={{ height: '8px', backgroundColor: '#1a1a2e', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: '97%', height: '100%', background: 'linear-gradient(90deg, #f39c12, #e67e22)', borderRadius: '4px' }} />
+              </div>
+              <p style={{ fontSize: '10px', color: '#7f8c8d', marginTop: '8px', textAlign: 'center' }}>13 sparks until Sprout evolution!</p>
+            </div>
+
+            {/* Path choices for each variant */}
+            {Object.entries(STAGE_2_PATHS).map(([variant, paths]) => (
+              <div key={variant} style={{ marginBottom: '24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                  <Sprite variant={variant} state="idle" size={40} />
+                  <div>
+                    <div style={{ fontWeight: 'bold', color: SEED_VARIANTS[variant].color }}>{SEED_VARIANTS[variant].name} → Sprout</div>
+                    <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Choose your path</div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginLeft: '52px' }}>
+                  {Object.entries(paths).map(([pathKey, pathData]) => (
+                    <div
+                      key={pathKey}
+                      style={{
+                        backgroundColor: '#1a1a2e',
+                        borderRadius: '8px',
+                        padding: '12px',
+                        flex: '1 1 180px',
+                        maxWidth: '220px',
+                        border: '2px solid transparent',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      <div style={{ fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>{pathData.name}</div>
+                      <div style={{ fontSize: '10px', color: '#7f8c8d', marginBottom: '8px' }}>{pathData.description}</div>
+                      <div style={{ fontSize: '10px', color: '#82E0AA', backgroundColor: 'rgba(130, 224, 170, 0.1)', padding: '4px 8px', borderRadius: '4px', display: 'inline-block' }}>
+                        {pathData.statBonus}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {/* Evolution stages visual */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '24px', flexWrap: 'wrap' }}>
+              {[
+                { stage: 1, name: 'Seed', sparks: 0, emoji: '🌱' },
+                { stage: 2, name: 'Sprout', sparks: 500, emoji: '🌿' },
+                { stage: 3, name: 'Bloom', sparks: 2500, emoji: '🌸' },
+                { stage: 4, name: 'Apex', sparks: 10000, emoji: '⭐' }
+              ].map((stage, i, arr) => (
+                <React.Fragment key={stage.stage}>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '24px', marginBottom: '4px', opacity: i === 0 ? 1 : 0.5 }}>{stage.emoji}</div>
+                    <div style={{ fontSize: '10px', color: '#fff' }}>{stage.name}</div>
+                    <div style={{ fontSize: '9px', color: '#7f8c8d' }}>{stage.sparks.toLocaleString()} ⚡</div>
+                  </div>
+                  {i < arr.length - 1 && (
+                    <div style={{ width: '30px', height: '2px', backgroundColor: '#333', marginBottom: '20px' }} />
+                  )}
+                </React.Fragment>
               ))}
             </div>
           </div>
