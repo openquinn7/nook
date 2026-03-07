@@ -507,10 +507,10 @@
             <div style={{ backgroundColor: '#0f172a', borderRadius: '16px', padding: '16px', border: '1px solid #334155', position: 'relative', overflow: 'hidden' }}>
               {/* Top Section: Room (left) + Info (right, expanded) */}
               <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-                {/* Left: Room with moving sprite */}
+                {/* Left: Room with moving sprite - wider rectangle */}
                 <div style={{
-                  width: '100px',
-                  height: '140px',
+                  width: '180px',
+                  height: '100px',
                   backgroundColor: '#1e293b',
                   borderRadius: '12px',
                   display: 'flex',
@@ -522,16 +522,15 @@
                   overflow: 'hidden'
                 }}>
                   {/* Room decorations */}
-                  <div style={{ position: 'absolute', top: '10px', left: '10px', width: '20px', height: '20px', background: '#334155', borderRadius: '4px' }} />
-                  <div style={{ position: 'absolute', top: '15px', right: '15px', width: '30px', height: '30px', background: '#334155', borderRadius: '50%' }} />
+                  <div style={{ position: 'absolute', top: '8px', left: '12px', width: '16px', height: '16px', background: '#334155', borderRadius: '4px' }} />
+                  <div style={{ position: 'absolute', top: '8px', right: '12px', width: '24px', height: '24px', background: '#334155', borderRadius: '50%' }} />
                   {/* Room floor */}
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '40px', background: 'linear-gradient(to top, #1e293b 0%, #334155 100%)', borderRadius: '0 0 10px 10px' }} />
-                  {/* Moving sprite */}
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30px', background: 'linear-gradient(to top, #1e293b 0%, #334155 100%)', borderRadius: '0 0 10px 10px' }} />
+                  {/* Moving sprite - centered */}
                   <div style={{
                     position: 'relative',
                     zIndex: 1,
-                    animation: agentStatus === 'working' ? 'sprite-idle 1s ease-in-out infinite' : 'none',
-                    transform: agentStatus === 'working' ? 'translateX(0)' : 'translateX(0)'
+                    animation: agentStatus === 'working' ? 'sprite-idle 1s ease-in-out infinite' : 'none'
                   }}>
                     <Sprite variant="worker" state={agentStatus === 'working' ? 'working' : 'idle'} size={48} />
                     {showSparkFloat && (
