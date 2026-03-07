@@ -297,7 +297,11 @@ class NookProtocol {
 
     const currentStage = this.sprite.stage;
 
-    if (currentStage === 2) {
+    // Stage 1 → 2: Choose path
+    if (currentStage === 1) {
+      this.sprite.choosePath(choice);
+      this.achievementSystem.trackEvent('agent.evolution', { stage: 2 });
+    } else if (currentStage === 2) {
       this.sprite.choosePath(choice);
       this.achievementSystem.trackEvent('agent.evolution', { stage: 2 });
     } else if (currentStage === 3) {

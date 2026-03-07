@@ -30,19 +30,109 @@ const SEED_VARIANTS = {
   }
 };
 
-// Stage 2 paths (chosen at stage 2)
+// Stage 2 paths (chosen at stage 2) - Pokemon/Digimon inspired
 const STAGE_2_PATHS = {
   worker: {
-    builder: { name: 'Builder', description: 'Focuses on construction and implementation', statBonus: { speed: 0.2 } },
-    autonomous: { name: 'Autonomous', description: 'Focuses on automation and efficiency', statBonus: { stamina: 0.2 } }
+    // Worker → Builder: Like a Machamp/Golem - sturdy, construction-focused
+    builder: {
+      name: 'Builder',
+      nameJa: 'ビルダー',
+      description: 'Focuses on construction and implementation',
+      visual: {
+        color: '#2980b9',  // Darker blue
+        accent: '#f39c12',  // Orange/gold
+        shape: 'hexagonal body with brick patterns',
+        features: ['hard hat', 'tool belt', 'glowing core'],
+        evolution: 'Seed grows into a sturdy worker form'
+      },
+      emoji: '🧱',
+      statBonus: { speed: 0.2 },
+      traits: ['reliable', 'hardworking', ' methodical']
+    },
+    // Worker → Autonomous: Like a Voltron/transformer - self-improving
+    autonomous: {
+      name: 'Autonomous',
+      nameJa: 'オノモックス',
+      description: 'Focuses on automation and efficiency',
+      visual: {
+        color: '#5dade2',  // Lighter blue
+        accent: '#00cec9',  // Cyan
+        shape: 'geometric/mechanical body',
+        features: ['self-assembling parts', 'data streams', 'efficiency indicators'],
+        evolution: 'Seed evolves into a self-optimizing machine'
+      },
+      emoji: '⚙️',
+      statBonus: { stamina: 0.2 },
+      traits: ['adaptive', 'self-improving', 'efficient']
+    }
   },
   explorer: {
-    scout: { name: 'Scout', description: 'Focuses on discovery and exploration', statBonus: { luck: 0.2 } },
-    investigator: { name: 'Investigator', description: 'Focuses on analysis and research', statBonus: { speed: 0.1, luck: 0.1 } }
+    // Explorer → Scout: Like a Lapras/Tentacruel - exploration/water
+    scout: {
+      name: 'Scout',
+      nameJa: 'スカウト',
+      description: 'Focuses on discovery and exploration',
+      visual: {
+        color: '#27ae60',  // Green
+        accent: '#f1c40f',  // Yellow
+        shape: 'sleek, aerodynamic body',
+        features: ['compass antenna', 'mapping sensors', 'explorer gear'],
+        evolution: 'Seed becomes an intrepid explorer'
+      },
+      emoji: '🧭',
+      statBonus: { luck: 0.2 },
+      traits: ['curious', 'adventurous', 'resourceful']
+    },
+    // Explorer → Investigator: Like a Ditto/Eevee - adaptive, analytical
+    investigator: {
+      name: 'Investigator',
+      nameJa: '探偵',
+      description: 'Focuses on analysis and research',
+      visual: {
+        color: '#1abc9c',  // Teal
+        accent: '#9b59b6',  // Purple
+        shape: 'compact, agile form',
+        features: ['magnifying glass', 'notebook', 'clue markers'],
+        evolution: 'Seed transforms into a keen analyst'
+      },
+      emoji: '🔍',
+      statBonus: { speed: 0.1, luck: 0.1 },
+      traits: ['observant', 'analytical', 'thorough']
+    }
   },
   scholar: {
-    analyst: { name: 'Analyst', description: 'Focuses on data and patterns', statBonus: { luck: 0.2 } },
-    planner: { name: 'Planner', description: 'Focuses on strategy and roadmaps', statBonus: { speed: 0.1, stamina: 0.1 } }
+    // Scholar → Analyst: Like an Alakazam/Gengar - cerebral, psychic
+    analyst: {
+      name: 'Analyst',
+      nameJa: 'アナリスト',
+      description: 'Focuses on data and patterns',
+      visual: {
+        color: '#8e44ad',  // Purple
+        accent: '#3498db',  // Blue
+        shape: 'elongated, intellectual form',
+        features: ['data crown', 'floating screens', 'brain aura'],
+        evolution: 'Seed evolves into a data-processing mind'
+      },
+      emoji: '📊',
+      statBonus: { luck: 0.2 },
+      traits: ['logical', 'calculating', 'insightful']
+    },
+    // Scholar → Planner: Like a Celebi/Slowking - wise, strategic
+    planner: {
+      name: 'Planner',
+      nameJa: 'プランナー',
+      description: 'Focuses on strategy and roadmaps',
+      visual: {
+        color: '#9b59b6',  // Purple
+        accent: '#e74c3c',  // Red
+        shape: 'flowing, robe-like body',
+        features: ['time crystal', 'strategy board', 'blueprint'],
+        evolution: 'Seed grows into a strategic mastermind'
+      },
+      emoji: '📜',
+      statBonus: { speed: 0.1, stamina: 0.1 },
+      traits: ['strategic', 'forward-thinking', 'wise']
+    }
   }
 };
 
@@ -245,8 +335,8 @@ class Sprite {
    * Choose evolution path at stage 2
    */
   choosePath(path) {
-    if (this.stage !== 2) {
-      throw new Error('Can only choose path at stage 2');
+    if (this.stage !== 1 && this.stage !== 2) {
+      throw new Error('Can only choose path at stage 1 or 2');
     }
 
     const validPaths = {

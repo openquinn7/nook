@@ -35,7 +35,7 @@ async function main() {
       break;
 
     case 'evolve':
-      await handleEvolve(nook);
+      await handleEvolve(nook, args.slice(1));
       break;
 
     case 'gacha':
@@ -147,7 +147,7 @@ async function handleEmit(nook, args) {
   console.log(chalk.gray('  await adapter.wrapTask(yourAsyncFunction)()\n'));
 }
 
-async function handleEvolve(nook) {
+async function handleEvolve(nook, args) {
   const status = nook.getStatus();
 
   if (!status.initialized) {
@@ -182,17 +182,24 @@ async function handleEvolve(nook) {
     title = 'Choose your apex form:';
   }
 
-  const { choice } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'choice',
-      message: title,
-      choices: Object.entries(choices).map(([key, v]) => ({
-        name: `${v.name} - ${v.description}`,
-        value: key
-      }))
-    }
-  ]);
+  // Show available choices
+  console.log(chalk.bold.cyan(`\n${title}\n`));
+  for (const [key, v] of Object.entries(choices)) {
+    console.log(`  ${key}: ${v.name} - ${v.description}`);
+  }
+  console.log('');
+
+  // If choice provided as argument, use it
+  let choice = args[0];
+  if (!choice) {
+    console.log(chalk.gray('Usage: node bin/nook.js evolve <choice>'));
+    return;
+  }
+
+  if (!choices[choice]) {
+    console.log(chalk.red(`Invalid choice: ${choice}`));
+    return;
+  }
 
   const result = nook.evolve(choice);
   console.log(chalk.green(`\n✅ ${result.message}`));
