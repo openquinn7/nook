@@ -11,9 +11,7 @@
   "scripts": {
     "build": "node build.js",
     "test": "node test.js",
-    "start": "node bin/nook.js",
-    "import": "node bin/nook-import.js all",
-    "cron": "node bin/nook-cron.js"
+    "start": "node bin/nook.js"
   },
   "keywords": [
     "ai",
@@ -24,7 +22,7 @@
     "sprite",
     "evolution"
   ],
-  "author": "Quinn",
+  "author": "Nook Team",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
