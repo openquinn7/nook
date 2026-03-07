@@ -148,6 +148,30 @@ class NookProtocol {
   }
 
   /**
+   * SIMPLE SPARK REGISTRATION - Fastest integration path
+   *
+   * Usage:
+   *   nook.work(1000)           // 1000 tokens = sparks
+   *   nook.work(500, 'research') // with task name
+   *   nook.sparks(1000)         // most intuitive
+   */
+  work(tokens, taskName = 'task') {
+    return this.emit({
+      type: 'agent.completed',
+      tokens: tokens,
+      workUnitId: `work-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+      metadata: { taskName }
+    });
+  }
+
+  /**
+   * Alias: nook.sparks(tokens) - most intuitive
+   */
+  sparks(tokens) {
+    return this.work(tokens);
+  }
+
+  /**
    * Emit an event to earn sparks
    */
   emit(event) {
@@ -156,12 +180,19 @@ class NookProtocol {
       throw new Error('Event type is required');
     }
 
-    // Add agentId if not provided
+    // Auto-fill all required fields for spark engine
+    if (!event.eventId) {
+      event.eventId = 'evt_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    }
+    if (!event.eventVersion) {
+      event.eventVersion = '1.0';
+    }
     if (!event.agentId) {
       event.agentId = this.agentId;
     }
-
-    // Add timestamp if not provided
+    if (!event.rootIdentityId) {
+      event.rootIdentityId = this.rootIdentity;
+    }
     if (!event.timestamp) {
       event.timestamp = Date.now();
     }
