@@ -416,38 +416,65 @@
       const [showWorld, setShowWorld] = useState(false);
       const [showOnboarding, setShowOnboarding] = useState(false);
 
-      // Interactive dashboard state
-      const [sparks, setSparks] = useState(0);
-      const [activity, setActivity] = useState([]);
+      // Interactive dashboard state - live feed from agent
+      const [sparks, setSparks] = useState(1247);
+      const [activity, setActivity] = useState([
+        { sparks: '+3', task: 'research job', time: '2m ago', color: '#82E0AA' },
+        { sparks: '+1', task: 'data fetch', time: '5m ago', color: '#82E0AA' },
+        { sparks: '+2', task: 'analysis', time: '12m ago', color: '#82E0AA' },
+        { sparks: '+1', task: 'code review', time: '18m ago', color: '#82E0AA' }
+      ]);
       const [showSparkFloat, setShowSparkFloat] = useState(false);
       const [lastSparkCount, setLastSparkCount] = useState(0);
+      const [agentStatus, setAgentStatus] = useState('idle');
 
-      // Simulate task completion
-      const completeTask = () => {
+      // Simulate live feed - in real implementation, this would fetch from agent
+      useEffect(() => {
         const tasks = [
           { name: 'research job', sparks: 3 },
           { name: 'data fetch', sparks: 1 },
           { name: 'analysis', sparks: 2 },
           { name: 'code review', sparks: 1 },
           { name: 'bug fix', sparks: 2 },
-          { name: 'deployment', sparks: 2 }
+          { name: 'deployment', sparks: 2 },
+          { name: 'API call', sparks: 1 },
+          { name: 'test run', sparks: 2 }
         ];
-        const task = tasks[Math.floor(Math.random() * tasks.length)];
-        const newSparks = sparks + task.sparks;
 
-        setLastSparkCount(task.sparks);
-        setSparks(newSparks);
-        setShowSparkFloat(true);
+        // Random interval to simulate live agent activity
+        const simulateActivity = () => {
+          const task = tasks[Math.floor(Math.random() * tasks.length)];
+          const newSparks = sparks + task.sparks;
 
-        setActivity(prev => [{
-          sparks: '+' + task.sparks,
-          task: task.name,
-          time: 'just now',
-          color: '#82E0AA'
-        }, ...prev.slice(0, 4)]);
+          setLastSparkCount(task.sparks);
+          setSparks(newSparks);
+          setShowSparkFloat(true);
+          setAgentStatus('working');
 
-        setTimeout(() => setShowSparkFloat(false), 1500);
-      };
+          setActivity(prev => [{
+            sparks: '+' + task.sparks,
+            task: task.name,
+            time: 'just now',
+            color: '#82E0AA'
+          }, ...prev.slice(0, 4)]);
+
+          setTimeout(() => setAgentStatus('idle'), 2000);
+          setTimeout(() => setShowSparkFloat(false), 1500);
+        };
+
+        // Start simulation after 3 seconds, then every 5-10 seconds
+        const initialTimeout = setTimeout(() => {
+          simulateActivity();
+          const interval = setInterval(() => {
+            if (Math.random() > 0.3) { // 70% chance to trigger
+              simulateActivity();
+            }
+          }, 5000 + Math.random() * 5000);
+          return () => clearInterval(interval);
+        }, 3000);
+
+        return () => clearTimeout(initialTimeout);
+      }, [sparks]);
 
       return (
         <div style={{
@@ -500,7 +527,11 @@
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff' }}>Agent: Quinn</div>
-                <div style={{ fontSize: '12px', color: '#7f8c8d' }}>Status: <span style={{ color: '#82E0AA' }}>●</span> working</div>
+                <div style={{ fontSize: '12px', color: '#7f8c8d' }}>
+                  Status: <span style={{ color: agentStatus === 'working' ? '#f39c12' : '#82E0AA' }}>
+                    {agentStatus === 'working' ? '⚡' : '●'} {agentStatus === 'working' ? 'working' : 'idle'}
+                  </span>
+                </div>
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#f39c12' }}>⚡ {sparks.toLocaleString()}</div>
@@ -509,38 +540,16 @@
             </div>
 
             <div style={{ borderTop: '1px solid #334155', paddingTop: '12px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <div style={{ fontSize: '11px', color: '#7f8c8d', textTransform: 'uppercase', letterSpacing: '1px' }}>Recent Activity</div>
-                <button
-                  onClick={completeTask}
-                  style={{
-                    padding: '6px 12px',
-                    fontSize: '11px',
-                    fontFamily: 'inherit',
-                    backgroundColor: '#f39c12',
-                    color: '#1a1a2e',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  + Complete Task
-                </button>
+              <div style={{ fontSize: '11px', color: '#7f8c8d', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
+                Live Feed
               </div>
-              {activity.length === 0 ? (
-                <div style={{ fontSize: '12px', color: '#7f8c8d', textAlign: 'center', padding: '20px' }}>
-                  Click "Complete Task" to earn sparks!
+              {activity.map((item, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 0', fontSize: '12px' }}>
+                  <span style={{ color: item.color, fontWeight: 'bold', minWidth: '35px' }}>⚡ {item.sparks}</span>
+                  <span style={{ color: '#fff', flex: 1 }}>{item.task}</span>
+                  <span style={{ color: '#7f8c8d' }}>{item.time}</span>
                 </div>
-              ) : (
-                activity.map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 0', fontSize: '12px' }}>
-                    <span style={{ color: item.color, fontWeight: 'bold', minWidth: '35px' }}>⚡ {item.sparks}</span>
-                    <span style={{ color: '#fff', flex: 1 }}>{item.task}</span>
-                    <span style={{ color: '#7f8c8d' }}>{item.time}</span>
-                  </div>
-                ))
-              )}
+              ))}
             </div>
           </div>
 
