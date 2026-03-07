@@ -492,6 +492,7 @@
             @keyframes sprite-sleeping { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
             @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
             @keyframes spark-float { 0% { opacity: 1; transform: translateY(0) scale(1); } 50% { opacity: 1; transform: translateY(-20px) scale(1.2); } 100% { opacity: 0; transform: translateY(-40px) scale(0.8); } }
+            @keyframes sprite-walk { 0% { transform: translateX(-40px); } 25% { transform: translateX(0px); } 50% { transform: translateX(40px); } 75% { transform: translateX(0px); } 100% { transform: translateX(-40px); } }
           `}</style>
 
           {/* Header */}
@@ -526,11 +527,11 @@
                   <div style={{ position: 'absolute', top: '8px', right: '12px', width: '24px', height: '24px', background: '#334155', borderRadius: '50%' }} />
                   {/* Room floor */}
                   <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '60px', background: 'linear-gradient(to top, #1e293b 0%, #334155 100%)', borderRadius: '0 0 10px 10px' }} />
-                  {/* Moving sprite - centered */}
+                  {/* Moving sprite - walking around */}
                   <div style={{
                     position: 'relative',
                     zIndex: 1,
-                    animation: agentStatus === 'working' ? 'sprite-idle 1s ease-in-out infinite' : 'none'
+                    animation: agentStatus === 'working' ? 'sprite-walk 4s ease-in-out infinite' : 'sprite-idle 2s ease-in-out infinite'
                   }}>
                     <Sprite variant="worker" state={agentStatus === 'working' ? 'working' : 'idle'} size={48} />
                     {showSparkFloat && (
