@@ -7,6 +7,8 @@ import React, { useState, useEffect } from 'react';
 import { Sprite } from './sprite-renderer';
 import { SparkEngine } from './spark-engine';
 import { AchievementSystem, ACHIEVEMENT_TIERS } from './achievements';
+import { OnboardingFlow } from './OnboardingFlow';
+import { STAGE_2_PATHS, STAGE_3_SUB_BRANCHES, STAGE_4_APEX_FORMS, EVOLUTION_THRESHOLDS } from './sprites';
 
 const DASHBOARD_STYLES = {
   container: {
@@ -144,6 +146,8 @@ export function NookDashboard({ sparkEngine, profile, achievementSystem }) {
   const [achievements, setAchievements] = useState([]);
   const [streak, setStreak] = useState({ current: 0, best: 0 });
   const [chests, setChests] = useState([]);
+  const [showEvolutionChoice, setShowEvolutionChoice] = useState(false);
+  const [evolutionType, setEvolutionType] = useState(null); // 'path', 'subBranch', 'apexForm'
 
   useEffect(() => {
     if (sparkEngine) {
@@ -192,6 +196,14 @@ export function NookDashboard({ sparkEngine, profile, achievementSystem }) {
     return date.toLocaleTimeString();
   };
 
+  // Show onboarding if no profile exists
+  if (!profile) {
+    return <OnboardingFlow onComplete={(data) => {
+      // In real app, save to storage and update parent
+      console.log('Onboarding complete:', data);
+    }} />;
+  }
+
   return (
     <div style={DASHBOARD_STYLES.container}>
       {/* Header */}
@@ -221,6 +233,14 @@ export function NookDashboard({ sparkEngine, profile, achievementSystem }) {
             <div style={DASHBOARD_STYLES.statValue}>{profile?.path || '-'}</div>
             <div style={DASHBOARD_STYLES.statLabel}>Path</div>
           </div>
+          <div style={DASHBOARD_STYLES.statItem}>
+            <div style={DASHBOARD_STYLES.statValue}>{profile?.subBranch || '-'}</div>
+            <div style={DASHBOARD_STYLES.statLabel}>Branch</div>
+          </div>
+          <div style={DASHBOARD_STYLES.statItem}>
+            <div style={DASHBOARD_STYLES.statValue}>{profile?.apexForm || '-'}</div>
+            <div style={DASHBOARD_STYLES.statLabel}>Apex</div>
+          </div>
         </div>
 
         {/* Progress to next evolution */}
@@ -236,6 +256,130 @@ export function NookDashboard({ sparkEngine, profile, achievementSystem }) {
           </div>
         )}
       </div>
+
+      {/* Evolution Choice (when eligible) */}
+      {profile?.stage >= 2 && sparks >= (profile?.stage === 2 ? 500 : profile?.stage === 3 ? 2500 : 10000) && !showEvolutionChoice && (
+        <div style={DASHBOARD_STYLES.card}>
+          <h3 style={{ marginTop: 0, color: '#f39c12' }}>🌟 Evolution Available!</h3>
+          <p>Your sprite is ready to evolve to Stage {profile?.stage + 1}!</p>
+          <button
+            onClick={() => {
+              if (profile?.stage === 2 && !profile?.path) setShowEvolutionChoice(true);
+              else if (profile?.stage === 3 && !profile?.subBranch) setShowEvolutionChoice(true);
+              else if (profile?.stage === 4 && !profile?.apexForm) setShowEvolutionChoice(true);
+            }}
+            style={{
+              padding: '12px 24px',
+              fontSize: '16px',
+              backgroundColor: '#f39c12',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}
+          >
+            Choose Evolution →
+          </button>
+        </div>
+      )}
+
+      {/* Evolution Choice Modal */}
+      {showEvolutionChoice && (
+        <div style={{
+          ...DASHBOARD_STYLES.card,
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 1000,
+          maxWidth: '600px',
+          width: '90%'
+        }}>
+          <h3 style={{ marginTop: 0 }}>
+            {profile?.stage === 2 && 'Choose Your Path'}
+            {profile?.stage === 3 && 'Choose Your Sub-Branch'}
+            {profile?.stage === 4 && 'Choose Your Apex Form'}
+          </h3>
+          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginTop: '20px' }}>
+            {profile?.stage === 2 && Object.entries(STAGE_2_PATHS[profile?.sprite?.variant] || {}).map(([key, data]) => (
+              <div
+                key={key}
+                onClick={() => {
+                  // In real app, call sprite.choosePath(key)
+                  console.log('Chose path:', key);
+                  setShowEvolutionChoice(false);
+                }}
+                style={{
+                  flex: '1 1 150px',
+                  padding: '16px',
+                  backgroundColor: '#f8f9fa',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  textAlign: 'center'
+                }}
+              >
+                <div style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>{data.name}</div>
+                <div style={{ fontSize: '12px', color: '#7f8c8d' }}>{data.description}</div>
+              </div>
+            ))}
+            {profile?.stage === 3 && Object.entries(STAGE_3_SUB_BRANCHES[profile?.sprite?.variant]?.[profile?.path] || {}).map(([key, data]) => (
+              <div
+                key={key}
+                onClick={() => {
+                  console.log('Chose sub-branch:', key);
+                  setShowEvolutionChoice(false);
+                }}
+                style={{
+                  flex: '1 1 150px',
+                  padding: '16px',
+                  backgroundColor: '#f8f9fa',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  textAlign: 'center'
+                }}
+              >
+                <div style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>{data.name}</div>
+                <div style={{ fontSize: '12px', color: '#7f8c8d' }}>{data.description}</div>
+              </div>
+            ))}
+            {profile?.stage === 4 && Object.entries(STAGE_4_APEX_FORMS[profile?.sprite?.variant] || {}).map(([key, data]) => (
+              <div
+                key={key}
+                onClick={() => {
+                  console.log('Chose apex form:', key);
+                  setShowEvolutionChoice(false);
+                }}
+                style={{
+                  flex: '1 1 150px',
+                  padding: '16px',
+                  backgroundColor: '#f8f9fa',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  textAlign: 'center'
+                }}
+              >
+                <div style={{ fontSize: '24px', marginBottom: '8px' }}>{data.emoji}</div>
+                <div style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>{data.name}</div>
+                <div style={{ fontSize: '12px', color: '#7f8c8d' }}>{data.description}</div>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={() => setShowEvolutionChoice(false)}
+            style={{
+              marginTop: '20px',
+              padding: '8px 16px',
+              backgroundColor: '#7f8c8d',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer'
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      )}
 
       {/* Recent Events */}
       <div style={DASHBOARD_STYLES.card}>
