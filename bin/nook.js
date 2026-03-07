@@ -45,6 +45,15 @@ async function main() {
       await handleAchievements(nook);
       break;
 
+    case 'history':
+    case 'events':
+      await handleHistory(nook);
+      break;
+
+    case 'verify':
+      await handleVerify(nook);
+      break;
+
     case 'help':
     case '--help':
     case '-h':
@@ -127,31 +136,13 @@ async function handleEmit(nook, args) {
     return;
   }
 
-  // Parse args: nook emit <tokens> [workUnitId]
-  const tokens = parseInt(args[0]) || 1000;
-  const workUnitId = args[1] || `task-${Date.now()}`;
-
-  console.log(chalk.gray(`Emitting event: completed ${workUnitId} with ${tokens} tokens`));
-
-  const result = nook.emit({
-    eventId: `evt-${Date.now()}`,
-    eventVersion: '1.0',
-    type: 'agent.completed',
-    workUnitId,
-    tokens,
-    success: true,
-    agentId: nook.agentId,
-    rootIdentityId: nook.rootIdentity
-  });
-
-  console.log(chalk.green(`\n✅ Earned ${result.sparks} sparks!`));
-  console.log(chalk.gray(`Total balance: ${result.totalSparks}`));
-
-  // Check for evolution
-  const newStatus = nook.getStatus();
-  if (newStatus.nextEvolution && newStatus.nextEvolution.sparksNeeded <= 0) {
-    console.log(chalk.cyan(`\n🌟 Ready to evolve to Stage ${newStatus.nextEvolution.stage}!`));
-  }
+  // Manual emit removed - sparks must come from verified agent sources
+  // Use adapters to integrate with agent frameworks
+  console.log(chalk.yellow('Manual emit disabled. Sparks must come from verified agent sources.'));
+  console.log(chalk.gray('\nTo earn sparks, integrate an adapter:'));
+  console.log(chalk.gray('  const { AgentAdapter } = require("@nook/protocol/adapters/generic")'));
+  console.log(chalk.gray('  const adapter = new AgentAdapter({ agentId: "your-agent" })'));
+  console.log(chalk.gray('  await adapter.wrapTask(yourAsyncFunction)()\n'));
 }
 
 async function handleEvolve(nook) {
@@ -283,6 +274,87 @@ async function handleAchievements(nook) {
   }
 }
 
+async function handleHistory(nook) {
+  const events = nook.getSparkEngine().getEvents();
+
+  if (events.length === 0) {
+    console.log(chalk.yellow('No events yet. Emit an event to start earning sparks!'));
+    return;
+  }
+
+  const projections = nook.getSparkEngine().getProjections();
+
+  console.log(chalk.bold.cyan('\n📜 Event History\n'));
+  console.log(chalk`{bold Total Events:} ${events.length}`);
+  console.log(chalk`{bold Lifetime Sparks:} ${projections.lifetime_sparks}`);
+  console.log(chalk`{bold Last 24h:} ${projections.sparks_last_24h}`);
+  console.log(chalk`{bold Last Hour:} ${projections.sparks_last_hour}`);
+  console.log(chalk.bold.cyan('\nRecent Events:\n'));
+
+  // Show last 10 events
+  const recent = events.slice(-10).reverse();
+  for (const e of recent) {
+    const date = new Date(e.timestamp);
+    const dateStr = date.toLocaleString();
+    const typeIcon = e.event.type === 'agent.completed' ? '✅' : '📝';
+    console.log(chalk`${typeIcon} {bold ${e.event.type}} - ${e.event.tokens || 0} tokens`);
+    console.log(chalk`  {gray ${dateStr}} - sparks: {bold ${e.sparks}}`);
+    if (e.event.workUnitId) {
+      console.log(chalk`  {gray workUnitId: ${e.event.workUnitId}}`);
+    }
+    console.log('');
+  }
+}
+
+async function handleVerify(nook) {
+  const status = nook.getStatus();
+
+  if (!status.initialized) {
+    console.log(chalk.yellow('No sprite found. Run "nook init" first!'));
+    return;
+  }
+
+  const events = nook.getSparkEngine().getEvents();
+
+  if (events.length === 0) {
+    console.log(chalk.yellow('No events to verify. Integrate an adapter to start tracking.'));
+    return;
+  }
+
+  console.log(chalk.bold.cyan('\n🔍 Verifying Event Log\n'));
+
+  // Verify each event has required fields and sum stored sparks
+  let verifiedTotal = 0;
+  let validEvents = 0;
+  let invalidEvents = 0;
+
+  for (const e of events) {
+    // Check required fields per spec
+    if (!e.event.eventId || !e.event.eventVersion || !e.event.type || !e.event.agentId) {
+      console.log(chalk.red(`  ❌ Invalid event: ${e.event.eventId || 'missing eventId'}`));
+      invalidEvents++;
+      continue;
+    }
+
+    // Event is valid - sum stored sparks
+    validEvents++;
+    verifiedTotal += e.sparks;
+  }
+
+  console.log(chalk`{bold Valid events:} ${validEvents}/${events.length}`);
+  if (invalidEvents > 0) {
+    console.log(chalk`{red Invalid events: ${invalidEvents}}`);
+  }
+  console.log(chalk`{bold Verified sparks (sum from events):} ${verifiedTotal}`);
+  console.log(chalk`{bold Stored balance:} ${status.sparks}`);
+
+  if (verifiedTotal === status.sparks && invalidEvents === 0) {
+    console.log(chalk.green('\n✅ Verification passed - event log is valid\n'));
+  } else {
+    console.log(chalk.red('\n⚠️  Verification failed\n'));
+  }
+}
+
 function showHelp() {
   console.log(chalk.bold.cyan(`
 🌱 Nook CLI
@@ -292,17 +364,18 @@ Usage: nook <command>
 Commands:
   init, start     Initialize a new sprite
   status, info     Show sprite status
-  emit <tokens>    Emit a completed event to earn sparks
   evolve           Choose evolution path/branch/apex
-  gacha, roll     Roll gacha for cosmetics
+  gacha, roll      Roll gacha for cosmetics
   achievements     Show unlocked achievements
+  history, events  Show event history and spark accumulation
+  verify           Verify event log integrity
   help             Show this help message
 
 Examples:
   nook init              # Start your journey
-  nook emit 5000         # Complete a task with 5000 tokens
+  nook status            # Check spark balance
+  nook verify            # Verify event log integrity
   nook evolve            # Choose your evolution
-  nook gacha             # Roll for cosmetics
 
 Learn more: https://github.com/openquinn7/nook
 `));
