@@ -860,25 +860,78 @@
             <div style={{ textAlign: 'center', fontSize: '20px', color: '#475569', marginBottom: '8px' }}>↓</div>
             <div style={{ textAlign: 'center', fontSize: '12px', color: '#f39c12', marginBottom: '20px' }}>2,500 ⚡ → Stage 3: Bloom</div>
 
-            {/* STAGE 3: BLOOM - 6 sub-branches */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
-              {Object.entries(STAGE_3_SUB_BRANCHES).map(([variant, paths]) =>
-                Object.entries(paths).map(([pathKey, branches]) =>
-                  Object.entries(branches).map(([branchKey, branchData]) => (
-                    <div key={`${variant}-${pathKey}-${branchKey}`} style={{
-                      backgroundColor: '#0f172a',
-                      borderRadius: '6px',
-                      padding: '6px 10px',
-                      border: '1px solid #334155',
-                      textAlign: 'center',
-                      minWidth: '70px'
-                    }}>
-                      <div style={{ fontSize: '9px', color: '#7f8c8d' }}>{SEED_VARIANTS[variant]?.name}</div>
-                      <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>{branchData.name}</div>
-                    </div>
-                  ))
-                )
-              )}
+            {/* STAGE 3: BLOOM - Grouped by variant with path shown */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '16px', flexWrap: 'wrap' }}>
+              {/* Worker path */}
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '9px', color: '#F4D03F', marginBottom: '8px' }}>Worker →</div>
+                <div style={{ display: 'flex', gap: '6px', justifyContent: 'center' }}>
+                  {/* Builder sub-branches */}
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '6px', padding: '6px 8px', border: '1px solid #F4D03F' }}>
+                    <div style={{ fontSize: '8px', color: '#7f8c8d' }}>Builder</div>
+                    <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>Architect</div>
+                  </div>
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '6px', padding: '6px 8px', border: '1px solid #F4D03F' }}>
+                    <div style={{ fontSize: '8px', color: '#7f8c8d' }}>Builder</div>
+                    <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>Craftsman</div>
+                  </div>
+                  {/* Autonomous sub-branches */}
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '6px', padding: '6px 8px', border: '1px solid #F4D03F' }}>
+                    <div style={{ fontSize: '8px', color: '#7f8c8d' }}>Autonomous</div>
+                    <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>Optimizer</div>
+                  </div>
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '6px', padding: '6px 8px', border: '1px solid #F4D03F' }}>
+                    <div style={{ fontSize: '8px', color: '#7f8c8d' }}>Autonomous</div>
+                    <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>AutoChef</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Explorer path */}
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '9px', color: '#82E0AA', marginBottom: '8px' }}>Explorer →</div>
+                <div style={{ display: 'flex', gap: '6px', justifyContent: 'center' }}>
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '6px', padding: '6px 8px', border: '1px solid #82E0AA' }}>
+                    <div style={{ fontSize: '8px', color: '#7f8c8d' }}>Scout</div>
+                    <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>Navigator</div>
+                  </div>
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '6px', padding: '6px 8px', border: '1px solid #82E0AA' }}>
+                    <div style={{ fontSize: '8px', color: '#7f8c8d' }}>Scout</div>
+                    <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>Pathfinder</div>
+                  </div>
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '6px', padding: '6px 8px', border: '1px solid #82E0AA' }}>
+                    <div style={{ fontSize: '8px', color: '#7f8c8d' }}>Investigator</div>
+                    <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>Tracer</div>
+                  </div>
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '6px', padding: '6px 8px', border: '1px solid #82E0AA' }}>
+                    <div style={{ fontSize: '8px', color: '#7f8c8d' }}>Investigator</div>
+                    <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>Profiler</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Scholar path */}
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '9px', color: '#AED6F1', marginBottom: '8px' }}>Scholar →</div>
+                <div style={{ display: 'flex', gap: '6px', justifyContent: 'center' }}>
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '6px', padding: '6px 8px', border: '1px solid #AED6F1' }}>
+                    <div style={{ fontSize: '8px', color: '#7f8c8d' }}>Analyst</div>
+                    <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>Quant</div>
+                  </div>
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '6px', padding: '6px 8px', border: '1px solid #AED6F1' }}>
+                    <div style={{ fontSize: '8px', color: '#7f8c8d' }}>Analyst</div>
+                    <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>Auditor</div>
+                  </div>
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '6px', padding: '6px 8px', border: '1px solid #AED6F1' }}>
+                    <div style={{ fontSize: '8px', color: '#7f8c8d' }}>Planner</div>
+                    <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>Strategist</div>
+                  </div>
+                  <div style={{ backgroundColor: '#0f172a', borderRadius: '6px', padding: '6px 8px', border: '1px solid #AED6F1' }}>
+                    <div style={{ fontSize: '8px', color: '#7f8c8d' }}>Planner</div>
+                    <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>Advisor</div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Arrow down */}
