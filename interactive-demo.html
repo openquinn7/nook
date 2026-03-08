@@ -526,19 +526,33 @@
           const task = tasks[Math.floor(Math.random() * tasks.length)];
           const newSparks = sparks + task.sparks;
 
+          // 10% chance of failure state
+          const isFailure = Math.random() < 0.1;
+
           setLastSparkCount(task.sparks);
           setSparks(newSparks);
           setShowSparkFloat(true);
-          setAgentStatus('working');
 
-          setActivity(prev => [{
-            sparks: '+' + task.sparks,
-            task: task.name,
-            time: 'just now',
-            color: '#82E0AA'
-          }, ...prev.slice(0, 4)]);
+          if (isFailure) {
+            setAgentStatus('failure');
+            setActivity(prev => [{
+              sparks: '0',
+              task: 'task failed',
+              time: 'just now',
+              color: '#ef4444'
+            }, ...prev.slice(0, 4)]);
+            setTimeout(() => setAgentStatus('idle'), 2500);
+          } else {
+            setAgentStatus('working');
+            setActivity(prev => [{
+              sparks: '+' + task.sparks,
+              task: task.name,
+              time: 'just now',
+              color: '#82E0AA'
+            }, ...prev.slice(0, 4)]);
+            setTimeout(() => setAgentStatus('idle'), 2000);
+          }
 
-          setTimeout(() => setAgentStatus('idle'), 2000);
           setTimeout(() => setShowSparkFloat(false), 1500);
         };
 
@@ -588,32 +602,46 @@
             <div style={{ backgroundColor: '#0f172a', borderRadius: '16px', padding: '16px', border: '1px solid #334155', position: 'relative', overflow: 'hidden' }}>
               {/* Top Section: Room (left) + Info (right, expanded) */}
               <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-                {/* Left: Room with moving sprite - wider rectangle */}
+                {/* Left: Room with zones */}
                 <div style={{
                   width: '260px',
                   height: '160px',
                   backgroundColor: '#1e293b',
                   borderRadius: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
                   position: 'relative',
                   border: '2px solid #334155',
                   flexShrink: 0,
                   overflow: 'hidden'
                 }}>
-                  {/* Room decorations */}
-                  <div style={{ position: 'absolute', top: '8px', left: '12px', width: '16px', height: '16px', background: '#334155', borderRadius: '4px' }} />
-                  <div style={{ position: 'absolute', top: '8px', right: '12px', width: '24px', height: '24px', background: '#334155', borderRadius: '50%' }} />
+                  {/* Zone labels */}
+                  <div style={{ position: 'absolute', top: '4px', left: '8px', fontSize: '8px', color: '#475569', textTransform: 'uppercase', letterSpacing: '1px' }}>Rest</div>
+                  <div style={{ position: 'absolute', top: '4px', left: '50%', transform: 'translateX(-50%)', fontSize: '8px', color: '#475569', textTransform: 'uppercase', letterSpacing: '1px' }}>Work</div>
+                  <div style={{ position: 'absolute', top: '4px', right: '8px', fontSize: '8px', color: '#475569', textTransform: 'uppercase', letterSpacing: '1px' }}>Bug</div>
+
+                  {/* Zone backgrounds */}
+                  {/* Rest zone (left) - cozy couch area */}
+                  <div style={{ position: 'absolute', left: '8px', bottom: '30px', width: '50px', height: '30px', background: '#334155', borderRadius: '4px', opacity: 0.5 }} />
+                  <div style={{ position: 'absolute', left: '12px', bottom: '35px', width: '8px', height: '8px', background: '#475569', borderRadius: '2px' }} />
+                  {/* Work zone (center) - desk */}
+                  <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', bottom: '30px', width: '60px', height: '25px', background: '#475569', borderRadius: '4px', opacity: 0.6 }} />
+                  <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', bottom: '55px', width: '40px', height: '20px', background: '#64748b', borderRadius: '2px' }} />
+                  {/* Bug zone (right) - error area */}
+                  <div style={{ position: 'absolute', right: '8px', bottom: '30px', width: '40px', height: '35px', background: '#7f1d1d', borderRadius: '4px', opacity: 0.3 }} />
+                  <div style={{ position: 'absolute', right: '15px', bottom: '40px', width: '8px', height: '8px', background: '#991b1b', borderRadius: '50%' }} />
+
                   {/* Room floor */}
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '60px', background: 'linear-gradient(to top, #1e293b 0%, #334155 100%)', borderRadius: '0 0 10px 10px' }} />
-                  {/* Moving sprite - walking around */}
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '25px', background: 'linear-gradient(to top, #1e293b 0%, #334155 100%)' }} />
+
+                  {/* Sprite position based on zone */}
                   <div style={{
-                    position: 'relative',
-                    zIndex: 1,
-                    animation: 'sprite-wander 6s ease-in-out infinite'
+                    position: 'absolute',
+                    bottom: agentStatus === 'working' ? '60px' : (agentStatus === 'failure' ? '40px' : '40px'),
+                    left: agentStatus === 'idle' ? '20px' : (agentStatus === 'working' ? '50%' : '75%'),
+                    transform: agentStatus === 'working' ? 'translateX(-50%)' : 'none',
+                    zIndex: 10,
+                    transition: 'all 0.5s ease'
                   }}>
-                    <Sprite variant="worker" state={agentStatus === 'working' ? 'working' : 'idle'} size={48} bubbleText={bubbleText} bubbleVisible={bubbleVisible} />
+                    <Sprite variant="worker" state={agentStatus === 'working' ? 'working' : (agentStatus === 'failure' ? 'failure' : 'idle')} size={42} bubbleText={bubbleText} bubbleVisible={bubbleVisible} />
                     {showSparkFloat && (
                       <div style={{
                         position: 'absolute',
