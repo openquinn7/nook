@@ -818,39 +818,6 @@
             ))}
           </div>
 
-          {/* Verification Levels */}
-          <div style={{ marginBottom: '30px', backgroundColor: '#16213e', borderRadius: '12px', padding: '24px' }}>
-            <h2 style={{ fontSize: '16px', color: '#3498db', marginBottom: '8px', textAlign: 'center' }}>✓ Verification Levels</h2>
-            <p style={{ fontSize: '12px', color: '#7f8c8d', textAlign: 'center', marginBottom: '20px' }}>Earn more sparks with higher verification</p>
-
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
-              {[
-                { level: 0, name: 'None', desc: 'No verification', sparks: '0', color: '#7f8c8d' },
-                { level: 1, name: 'Output', desc: 'Task completed, output present', sparks: '1 ⚡', color: '#82E0AA' },
-                { level: 2, name: 'Automated', desc: 'Tests/checks pass', sparks: '2 ⚡', color: '#F39C12' },
-                { level: 3, name: 'Human', desc: 'Human confirmation', sparks: '3 ⚡', color: '#E74C3C' }
-              ].map(v => (
-                <div key={v.level} style={{
-                  backgroundColor: '#0f172a',
-                  borderRadius: '8px',
-                  padding: '16px',
-                  flex: '1 1 160px',
-                  maxWidth: '200px',
-                  border: `2px solid ${v.color}`,
-                  textAlign: 'center'
-                }}>
-                  <div style={{ fontSize: '20px', fontWeight: 'bold', color: v.color, marginBottom: '4px' }}>{v.name}</div>
-                  <div style={{ fontSize: '10px', color: '#7f8c8d', marginBottom: '8px' }}>{v.desc}</div>
-                  <div style={{ fontSize: '14px', fontWeight: 'bold', color: v.sparks.includes('3') ? '#E74C3C' : v.sparks.includes('2') ? '#F39C12' : v.sparks.includes('1') ? '#82E0AA' : '#7f8c8d' }}>{v.sparks}</div>
-                </div>
-              ))}
-            </div>
-
-            <div style={{ marginTop: '16px', textAlign: 'center', fontSize: '11px', color: '#7f8c8d' }}>
-              Events are hash-chained for immutability • Chain can be verified
-            </div>
-          </div>
-
           {/* Evolution Tree */}
           <div style={{ marginBottom: '30px' }}>
             <h2 style={{ fontSize: '16px', color: '#f39c12', marginBottom: '16px', textAlign: 'center' }}>🌳 Evolution Tree</h2>
