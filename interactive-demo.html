@@ -818,126 +818,117 @@
             ))}
           </div>
 
-          {/* Evolution Tree - Single unified view */}
+          {/* Evolution Tree - Branching view */}
           <div style={{ marginBottom: '30px', backgroundColor: '#16213e', borderRadius: '16px', padding: '24px' }}>
             <h2 style={{ fontSize: '20px', color: '#f39c12', marginBottom: '24px', textAlign: 'center' }}>🌳 Evolution Tree</h2>
 
-            {/* Stage progression - horizontal tree */}
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '8px', flexWrap: 'wrap', marginBottom: '32px' }}>
-
-              {/* Stage 1: Seed */}
-              <div style={{ textAlign: 'center' }}>
-                <div style={{
-                  backgroundColor: '#0f172a',
-                  borderRadius: '12px',
-                  padding: '16px',
-                  border: '2px solid #E8D5B7',
-                  width: '90px'
-                }}>
-                  <Sprite variant="seed" state="idle" size={56} />
-                </div>
-                <div style={{ marginTop: '8px', fontWeight: 'bold', color: '#E8D5B7', fontSize: '12px' }}>Seed</div>
-                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Start</div>
-              </div>
-
-              {/* Arrow */}
-              <div style={{ fontSize: '20px', color: '#475569', alignSelf: 'center', marginTop: '-20px' }}>→</div>
-
-              {/* Stage 2: Sprout - show paths */}
-              <div style={{ textAlign: 'center' }}>
-                <div style={{
-                  backgroundColor: '#0f172a',
-                  borderRadius: '12px',
-                  padding: '16px',
-                  border: '2px solid #82E0AA',
-                  width: '90px'
-                }}>
-                  <Sprite variant="worker" state="idle" size={56} />
-                </div>
-                <div style={{ marginTop: '8px', fontWeight: 'bold', color: '#82E0AA', fontSize: '12px' }}>Sprout</div>
-                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>500 ⚡</div>
-              </div>
-
-              {/* Arrow */}
-              <div style={{ fontSize: '20px', color: '#475569', alignSelf: 'center', marginTop: '-20px' }}>→</div>
-
-              {/* Stage 3: Bloom */}
-              <div style={{ textAlign: 'center' }}>
-                <div style={{
-                  backgroundColor: '#0f172a',
-                  borderRadius: '12px',
-                  padding: '16px',
-                  border: '2px solid #E74C3C',
-                  width: '90px'
-                }}>
-                  <Sprite variant="worker" state="idle" size={56} />
-                </div>
-                <div style={{ marginTop: '8px', fontWeight: 'bold', color: '#E74C3C', fontSize: '12px' }}>Bloom</div>
-                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>2,500 ⚡</div>
-              </div>
-
-              {/* Arrow */}
-              <div style={{ fontSize: '20px', color: '#475569', alignSelf: 'center', marginTop: '-20px' }}>→</div>
-
-              {/* Stage 4: Apex */}
-              <div style={{ textAlign: 'center' }}>
-                <div style={{
-                  backgroundColor: '#0f172a',
-                  borderRadius: '12px',
-                  padding: '16px',
-                  border: '2px solid #9B59B6',
-                  width: '90px',
-                  boxShadow: '0 0 20px rgba(155, 89, 182, 0.3)'
-                }}>
-                  <Sprite variant="worker" state="success" size={56} />
-                </div>
-                <div style={{ marginTop: '8px', fontWeight: 'bold', color: '#9B59B6', fontSize: '12px' }}>Apex</div>
-                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>10,000 ⚡</div>
-              </div>
-            </div>
-
-            {/* Spark requirements */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', flexWrap: 'wrap', marginBottom: '24px' }}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px' }}>🌱</div>
-                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Seed</div>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px' }}>🌿</div>
-                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Sprout (500)</div>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px' }}>🌸</div>
-                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Bloom (2,500)</div>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '24px' }}>⭐</div>
-                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Apex (10,000)</div>
-              </div>
-            </div>
-
-            {/* Variant choices at Seed */}
-            <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid #334155' }}>
-              <div style={{ fontSize: '12px', color: '#7f8c8d', marginBottom: '16px', textAlign: 'center' }}>Choose your seed variant</div>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                {Object.entries(SEED_VARIANTS).map(([variant, v]) => (
-                  <div
-                    key={variant}
-                    style={{
-                      backgroundColor: '#0f172a',
-                      borderRadius: '8px',
-                      padding: '12px',
-                      border: `2px solid ${v.color}`,
-                      textAlign: 'center',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s',
-                      minWidth: '80px'
-                    }}
-                  >
-                    <Sprite variant={variant} state="idle" size={48} />
-                    <div style={{ marginTop: '8px', fontWeight: 'bold', color: v.color, fontSize: '11px' }}>{v.name}</div>
+            {/* STAGE 1: SEED - All start here */}
+            <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+              <div style={{ fontSize: '10px', color: '#7f8c8d', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>Stage 1: Seed</div>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+                {Object.entries(SEED_VARIANTS).filter(([k]) => k !== 'seed').map(([variant, v]) => (
+                  <div key={variant} style={{
+                    backgroundColor: '#0f172a',
+                    borderRadius: '8px',
+                    padding: '8px',
+                    border: `2px solid ${v.color}`
+                  }}>
+                    <Sprite variant={variant} state="idle" size={40} />
+                    <div style={{ fontSize: '10px', color: v.color, marginTop: '4px' }}>{v.name}</div>
                   </div>
                 ))}
+              </div>
+            </div>
+
+            {/* Arrow down */}
+            <div style={{ textAlign: 'center', fontSize: '20px', color: '#475569', marginBottom: '8px' }}>↓</div>
+            <div style={{ textAlign: 'center', fontSize: '12px', color: '#f39c12', marginBottom: '20px' }}>500 ⚡ → Stage 2: Sprout</div>
+
+            {/* STAGE 2: SPROUT - 3 Paths */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '16px', flexWrap: 'wrap' }}>
+              {Object.entries(STAGE_2_PATHS).map(([variant, paths]) => (
+                <div key={variant} style={{ textAlign: 'center' }}>
+                  <Sprite variant={variant} state="idle" size={48} />
+                  <div style={{ fontSize: '10px', color: SEED_VARIANTS[variant]?.color || '#fff', marginTop: '4px' }}>
+                    {SEED_VARIANTS[variant]?.name}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Arrow down */}
+            <div style={{ textAlign: 'center', fontSize: '20px', color: '#475569', marginBottom: '8px' }}>↓</div>
+            <div style={{ textAlign: 'center', fontSize: '12px', color: '#f39c12', marginBottom: '20px' }}>2,500 ⚡ → Stage 3: Bloom</div>
+
+            {/* STAGE 3: BLOOM - 6 sub-branches */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
+              {Object.entries(STAGE_3_SUB_BRANCHES).map(([variant, paths]) =>
+                Object.entries(paths).map(([pathKey, branches]) =>
+                  Object.entries(branches).map(([branchKey, branchData]) => (
+                    <div key={`${variant}-${pathKey}-${branchKey}`} style={{
+                      backgroundColor: '#0f172a',
+                      borderRadius: '6px',
+                      padding: '6px 10px',
+                      border: '1px solid #334155',
+                      textAlign: 'center',
+                      minWidth: '70px'
+                    }}>
+                      <div style={{ fontSize: '9px', color: '#7f8c8d' }}>{SEED_VARIANTS[variant]?.name}</div>
+                      <div style={{ fontSize: '10px', color: '#fff', fontWeight: 'bold' }}>{branchData.name}</div>
+                    </div>
+                  ))
+                )
+              )}
+            </div>
+
+            {/* Arrow down */}
+            <div style={{ textAlign: 'center', fontSize: '20px', color: '#475569', marginBottom: '8px' }}>↓</div>
+            <div style={{ textAlign: 'center', fontSize: '12px', color: '#f39c12', marginBottom: '20px' }}>10,000 ⚡ → Stage 4: Apex</div>
+
+            {/* STAGE 4: APEX - Champion & Legend */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginBottom: '16px' }}>
+              <div style={{
+                backgroundColor: '#0f172a',
+                borderRadius: '12px',
+                padding: '16px',
+                border: '2px solid #9B59B6',
+                textAlign: 'center',
+                boxShadow: '0 0 20px rgba(155, 89, 182, 0.3)'
+              }}>
+                <div style={{ fontSize: '32px', marginBottom: '8px' }}>🏆</div>
+                <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#9B59B6' }}>Champion</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Apex</div>
+              </div>
+              <div style={{
+                backgroundColor: '#0f172a',
+                borderRadius: '12px',
+                padding: '16px',
+                border: '2px solid #fbbf24',
+                textAlign: 'center',
+                boxShadow: '0 0 20px rgba(251, 191, 36, 0.3)'
+              }}>
+                <div style={{ fontSize: '32px', marginBottom: '8px' }}>👑</div>
+                <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#fbbf24' }}>Legend</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Apex</div>
+              </div>
+            </div>
+
+            {/* Spark summary */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', flexWrap: 'wrap', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #334155' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '20px' }}>🌱</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Seed → Sprout</div>
+                <div style={{ fontSize: '12px', color: '#f39c12' }}>500 ⚡</div>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '20px' }}>🌿</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Sprout → Bloom</div>
+                <div style={{ fontSize: '12px', color: '#f39c12' }}>2,500 ⚡</div>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '20px' }}>🌸</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Bloom → Apex</div>
+                <div style={{ fontSize: '12px', color: '#f39c12' }}>10,000 ⚡</div>
               </div>
             </div>
           </div>
