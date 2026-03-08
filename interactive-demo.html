@@ -42,6 +42,11 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
+
+    @keyframes bubble-appear {
+      0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+      100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -171,8 +176,56 @@
 
     const SPRITE_STATES = ['idle', 'working', 'success', 'failure', 'sleeping'];
 
+    // Speech bubble texts by state (inspired by Star Office UI)
+    const BUBBLE_TEXTS = {
+      idle: ['Waiting for work...', 'Ready to help!', 'Any tasks for me?', 'Taking a break', 'Enjoying the moment'],
+      working: ['Processing tokens...', 'Analyzing code...', 'Writing response...', 'Running tasks...', 'Executing...'],
+      success: ['Task complete!', 'Got it done!', 'All done!', 'Spark earned!', 'Nice work!'],
+      failure: ['Hmm, let me retry', 'Error occurred...', 'Debugging...', 'Back to work!', 'Fixing issues...'],
+      sleeping: ['Zzz...', 'Dreaming...', 'Resting...', 'Recharging...']
+    };
+
+    // Speech Bubble Component
+    function SpeechBubble({ state, visible, text }) {
+      if (!visible) return null;
+
+      return (
+        <div style={{
+          position: 'absolute',
+          top: '-45px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: '#fff',
+          color: '#1a1a2e',
+          padding: '6px 12px',
+          borderRadius: '12px',
+          fontSize: '11px',
+          fontFamily: 'VT323, monospace',
+          whiteSpace: 'nowrap',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+          zIndex: 100,
+          animation: 'bubble-appear 0.3s ease-out',
+          border: '2px solid #1a1a2e'
+        }}>
+          {text}
+          {/* Bubble triangle */}
+          <div style={{
+            position: 'absolute',
+            bottom: '-8px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 0,
+            height: 0,
+            borderLeft: '8px solid transparent',
+            borderRight: '8px solid transparent',
+            borderTop: '8px solid #1a1a2e'
+          }} />
+        </div>
+      );
+    }
+
     // SVG Sprite component
-    function Sprite({ variant = 'seed', state = 'idle', size = 64 }) {
+    function Sprite({ variant = 'seed', state = 'idle', size = 64, showBubble = false, bubbleText = '', bubbleVisible = false }) {
       const svg = SVG_SPRITES[variant]?.[state] || SVG_SPRITES.seed.idle;
 
       const stateAnimations = {
@@ -184,15 +237,18 @@
       };
 
       return (
-        <div
-          style={{
-            width: size,
-            height: size,
-            animation: stateAnimations[state] || stateAnimations.idle,
-            transition: 'all 0.3s ease'
-          }}
-          dangerouslySetInnerHTML={{ __html: svg.replace('viewBox="0 0 32 32"', `viewBox="0 0 32 32" width="${size}" height="${size}"`) }}
-        />
+        <div style={{ position: 'relative' }}>
+          <SpeechBubble state={state} visible={bubbleVisible} text={bubbleText} />
+          <div
+            style={{
+              width: size,
+              height: size,
+              animation: stateAnimations[state] || stateAnimations.idle,
+              transition: 'all 0.3s ease'
+            }}
+            dangerouslySetInnerHTML={{ __html: svg.replace('viewBox="0 0 32 32"', `viewBox="0 0 32 32" width="${size}" height="${size}"`) }}
+          />
+        </div>
       );
     }
 
@@ -427,6 +483,30 @@
       const [showSparkFloat, setShowSparkFloat] = useState(false);
       const [lastSparkCount, setLastSparkCount] = useState(0);
       const [agentStatus, setAgentStatus] = useState('idle');
+      const [bubbleVisible, setBubbleVisible] = useState(false);
+      const [bubbleText, setBubbleText] = useState('');
+
+      // Speech bubble effect - show random bubble based on agent status
+      useEffect(() => {
+        const showBubble = () => {
+          const texts = BUBBLE_TEXTS[agentStatus] || BUBBLE_TEXTS.idle;
+          const text = texts[Math.floor(Math.random() * texts.length)];
+          setBubbleText(text);
+          setBubbleVisible(true);
+          // Hide after 3 seconds
+          setTimeout(() => setBubbleVisible(false), 3000);
+        };
+
+        // Show bubble every 5-8 seconds
+        const interval = setInterval(() => {
+          if (Math.random() > 0.3) showBubble();
+        }, 5000 + Math.random() * 3000);
+
+        // Show initial bubble after 2 seconds
+        const initialTimeout = setTimeout(showBubble, 2000);
+
+        return () => { clearInterval(interval); clearTimeout(initialTimeout); };
+      }, [agentStatus]);
 
       // Simulate live feed - in real implementation, this would fetch from agent
       useEffect(() => {
@@ -533,7 +613,7 @@
                     zIndex: 1,
                     animation: 'sprite-wander 6s ease-in-out infinite'
                   }}>
-                    <Sprite variant="worker" state={agentStatus === 'working' ? 'working' : 'idle'} size={48} />
+                    <Sprite variant="worker" state={agentStatus === 'working' ? 'working' : 'idle'} size={48} bubbleText={bubbleText} bubbleVisible={bubbleVisible} />
                     {showSparkFloat && (
                       <div style={{
                         position: 'absolute',
