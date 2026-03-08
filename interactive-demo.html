@@ -818,268 +818,127 @@
             ))}
           </div>
 
-          {/* Evolution Tree */}
-          <div style={{ marginBottom: '30px' }}>
-            <h2 style={{ fontSize: '16px', color: '#f39c12', marginBottom: '16px', textAlign: 'center' }}>🌳 Evolution Tree</h2>
-            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
-              {Object.entries(SEED_VARIANTS).map(([variant, v]) => (
-                <div key={variant} style={{ backgroundColor: '#16213e', borderRadius: '12px', padding: '20px', textAlign: 'center', minWidth: '150px' }}>
-                  <Sprite variant={variant} state="idle" size={64} />
-                  <div style={{ marginTop: '12px', fontWeight: 'bold', color: v.color }}>{v.name}</div>
-                  <div style={{ fontSize: '10px', color: '#7f8c8d', marginTop: '4px' }}>Stage 1 - Seed</div>
+          {/* Evolution Tree - Single unified view */}
+          <div style={{ marginBottom: '30px', backgroundColor: '#16213e', borderRadius: '16px', padding: '24px' }}>
+            <h2 style={{ fontSize: '20px', color: '#f39c12', marginBottom: '24px', textAlign: 'center' }}>🌳 Evolution Tree</h2>
+
+            {/* Stage progression - horizontal tree */}
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '8px', flexWrap: 'wrap', marginBottom: '32px' }}>
+
+              {/* Stage 1: Seed */}
+              <div style={{ textAlign: 'center' }}>
+                <div style={{
+                  backgroundColor: '#0f172a',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  border: '2px solid #E8D5B7',
+                  width: '90px'
+                }}>
+                  <Sprite variant="seed" state="idle" size={56} />
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Evolution 2 Mockup - Sprout Stage */}
-          <div style={{ marginBottom: '30px', backgroundColor: '#16213e', borderRadius: '12px', padding: '24px' }}>
-            <h2 style={{ fontSize: '16px', color: '#82E0AA', marginBottom: '8px', textAlign: 'center' }}>🌿 Evolution 2: Sprout Stage</h2>
-            <p style={{ fontSize: '12px', color: '#7f8c8d', textAlign: 'center', marginBottom: '20px' }}>At 500 sparks, your Seed evolves into a Sprout and chooses a path</p>
-
-            {/* Current progress */}
-            <div style={{ backgroundColor: '#0f172a', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ color: '#7f8c8d' }}>Current Sparks</span>
-                <span style={{ color: '#f39c12' }}>⚡ 487 / 500</span>
+                <div style={{ marginTop: '8px', fontWeight: 'bold', color: '#E8D5B7', fontSize: '12px' }}>Seed</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Start</div>
               </div>
-              <div style={{ height: '8px', backgroundColor: '#1a1a2e', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ width: '97%', height: '100%', background: 'linear-gradient(90deg, #f39c12, #e67e22)', borderRadius: '4px' }} />
+
+              {/* Arrow */}
+              <div style={{ fontSize: '20px', color: '#475569', alignSelf: 'center', marginTop: '-20px' }}>→</div>
+
+              {/* Stage 2: Sprout - show paths */}
+              <div style={{ textAlign: 'center' }}>
+                <div style={{
+                  backgroundColor: '#0f172a',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  border: '2px solid #82E0AA',
+                  width: '90px'
+                }}>
+                  <Sprite variant="worker" state="idle" size={56} />
+                </div>
+                <div style={{ marginTop: '8px', fontWeight: 'bold', color: '#82E0AA', fontSize: '12px' }}>Sprout</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>500 ⚡</div>
               </div>
-              <p style={{ fontSize: '10px', color: '#7f8c8d', marginTop: '8px', textAlign: 'center' }}>13 sparks until Sprout evolution!</p>
-            </div>
 
-            {/* Path choices for each variant */}
-            {Object.entries(STAGE_2_PATHS).map(([variant, paths]) => (
-              <div key={variant} style={{ marginBottom: '24px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                  <Sprite variant={variant} state="idle" size={40} />
-                  <div>
-                    <div style={{ fontWeight: 'bold', color: SEED_VARIANTS[variant].color }}>{SEED_VARIANTS[variant].name} → Sprout</div>
-                    <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Choose your path</div>
-                  </div>
+              {/* Arrow */}
+              <div style={{ fontSize: '20px', color: '#475569', alignSelf: 'center', marginTop: '-20px' }}>→</div>
+
+              {/* Stage 3: Bloom */}
+              <div style={{ textAlign: 'center' }}>
+                <div style={{
+                  backgroundColor: '#0f172a',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  border: '2px solid #E74C3C',
+                  width: '90px'
+                }}>
+                  <Sprite variant="worker" state="idle" size={56} />
                 </div>
-                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginLeft: '52px' }}>
-                  {Object.entries(paths).map(([pathKey, pathData]) => (
-                    <div
-                      key={pathKey}
-                      style={{
-                        backgroundColor: '#1a1a2e',
-                        borderRadius: '8px',
-                        padding: '12px',
-                        flex: '1 1 180px',
-                        maxWidth: '220px',
-                        border: '2px solid transparent',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>{pathData.name}</div>
-                      <div style={{ fontSize: '10px', color: '#7f8c8d' }}>{pathData.description}</div>
-                    </div>
-                  ))}
-                </div>
+                <div style={{ marginTop: '8px', fontWeight: 'bold', color: '#E74C3C', fontSize: '12px' }}>Bloom</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>2,500 ⚡</div>
               </div>
-            ))}
 
-            {/* Evolution stages visual */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '24px', flexWrap: 'wrap' }}>
-              {[
-                { stage: 1, name: 'Seed', sparks: 0, emoji: '🌱' },
-                { stage: 2, name: 'Sprout', sparks: 500, emoji: '🌿' },
-                { stage: 3, name: 'Bloom', sparks: 2500, emoji: '🌸' },
-                { stage: 4, name: 'Apex', sparks: 10000, emoji: '⭐' }
-              ].map((stage, i, arr) => (
-                <React.Fragment key={stage.stage}>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '24px', marginBottom: '4px', opacity: i === 0 ? 1 : 0.5 }}>{stage.emoji}</div>
-                    <div style={{ fontSize: '10px', color: '#fff' }}>{stage.name}</div>
-                    <div style={{ fontSize: '9px', color: '#7f8c8d' }}>{stage.sparks.toLocaleString()} ⚡</div>
-                  </div>
-                  {i < arr.length - 1 && (
-                    <div style={{ width: '30px', height: '2px', backgroundColor: '#333', marginBottom: '20px' }} />
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
+              {/* Arrow */}
+              <div style={{ fontSize: '20px', color: '#475569', alignSelf: 'center', marginTop: '-20px' }}>→</div>
 
-          {/* Evolution 3 Mockup - Bloom Stage */}
-          <div style={{ marginBottom: '30px', backgroundColor: '#16213e', borderRadius: '12px', padding: '24px' }}>
-            <h2 style={{ fontSize: '16px', color: '#E74C3C', marginBottom: '8px', textAlign: 'center' }}>🌸 Evolution 3: Bloom Stage</h2>
-            <p style={{ fontSize: '12px', color: '#7f8c8d', textAlign: 'center', marginBottom: '20px' }}>At 2,500 sparks, your Sprout blooms and chooses a sub-branch</p>
-
-            {/* Current progress */}
-            <div style={{ backgroundColor: '#0f172a', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ color: '#7f8c8d' }}>Current Sparks</span>
-                <span style={{ color: '#f39c12' }}>⚡ 2,487 / 2,500</span>
-              </div>
-              <div style={{ height: '8px', backgroundColor: '#1a1a2e', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ width: '99%', height: '100%', background: 'linear-gradient(90deg, #e74c3c, #f39c12)', borderRadius: '4px' }} />
-              </div>
-              <p style={{ fontSize: '10px', color: '#7f8c8d', marginTop: '8px', textAlign: 'center' }}>13 sparks until Bloom evolution!</p>
-            </div>
-
-            {/* Current path context */}
-            <div style={{ backgroundColor: '#0f172a', borderRadius: '8px', padding: '16px', marginBottom: '24px', textAlign: 'center' }}>
-              <div style={{ fontSize: '12px', color: '#7f8c8d', marginBottom: '8px' }}>Current Evolution Path</div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Sprite variant="worker" state="idle" size={32} />
-                  <span style={{ color: '#F4D03F' }}>Worker</span>
+              {/* Stage 4: Apex */}
+              <div style={{ textAlign: 'center' }}>
+                <div style={{
+                  backgroundColor: '#0f172a',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  border: '2px solid #9B59B6',
+                  width: '90px',
+                  boxShadow: '0 0 20px rgba(155, 89, 182, 0.3)'
+                }}>
+                  <Sprite variant="worker" state="success" size={56} />
                 </div>
-                <span style={{ color: '#7f8c8d' }}>→</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ color: '#82E0AA' }}>Builder</span>
-                  <span style={{ fontSize: '16px' }}>→</span>
-                </div>
-                <div style={{ backgroundColor: '#1a1a2e', padding: '4px 12px', borderRadius: '4px' }}>
-                  <span style={{ color: '#f39c12', fontWeight: 'bold' }}>Choose Sub-Branch</span>
-                </div>
+                <div style={{ marginTop: '8px', fontWeight: 'bold', color: '#9B59B6', fontSize: '12px' }}>Apex</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>10,000 ⚡</div>
               </div>
             </div>
 
-            {/* Sub-branch choices for each path */}
-            {Object.entries(STAGE_3_SUB_BRANCHES.worker).map(([pathKey, branches]) => (
-              <div key={pathKey} style={{ marginBottom: '20px' }}>
-                <div style={{ fontSize: '11px', color: '#7f8c8d', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                  After {STAGE_2_PATHS.worker[pathKey]?.name || pathKey}
-                </div>
-                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                  {Object.entries(branches).map(([branchKey, branchData]) => (
-                    <div
-                      key={branchKey}
-                      style={{
-                        backgroundColor: '#1a1a2e',
-                        borderRadius: '8px',
-                        padding: '12px',
-                        flex: '1 1 160px',
-                        maxWidth: '200px',
-                        border: '2px solid #f39c12',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>{branchData.name}</div>
-                      <div style={{ fontSize: '10px', color: '#7f8c8d' }}>{branchData.description}</div>
-                    </div>
-                  ))}
-                </div>
+            {/* Spark requirements */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', flexWrap: 'wrap', marginBottom: '24px' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px' }}>🌱</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Seed</div>
               </div>
-            ))}
-
-            {/* Show other variants' paths too */}
-            {Object.entries(STAGE_3_SUB_BRANCHES).filter(([v]) => v !== 'worker').map(([variant, paths]) => (
-              <div key={variant} style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid #333' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                  <Sprite variant={variant} state="idle" size={28} />
-                  <span style={{ color: SEED_VARIANTS[variant].color, fontWeight: 'bold' }}>{SEED_VARIANTS[variant].name}</span>
-                </div>
-                {Object.entries(paths).map(([pathKey, branches]) => (
-                  <div key={pathKey} style={{ marginBottom: '12px', marginLeft: '36px' }}>
-                    <div style={{ fontSize: '10px', color: '#7f8c8d', marginBottom: '4px' }}>{STAGE_2_PATHS[variant]?.[pathKey]?.name || pathKey} →</div>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                      {Object.entries(branches).map(([branchKey, branchData]) => (
-                        <div
-                          key={branchKey}
-                          style={{
-                            backgroundColor: '#1a1a2e',
-                            borderRadius: '6px',
-                            padding: '8px',
-                            flex: '1 1 140px',
-                            maxWidth: '180px'
-                          }}
-                        >
-                          <div style={{ fontWeight: 'bold', color: '#fff', fontSize: '11px' }}>{branchData.name}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px' }}>🌿</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Sprout (500)</div>
               </div>
-            ))}
-          </div>
-
-          {/* Evolution 4 Mockup - Apex Stage */}
-          <div style={{ marginBottom: '30px', backgroundColor: '#16213e', borderRadius: '12px', padding: '24px' }}>
-            <h2 style={{ fontSize: '16px', color: '#9B59B6', marginBottom: '8px', textAlign: 'center' }}>⭐ Evolution 4: Apex Stage</h2>
-            <p style={{ fontSize: '12px', color: '#7f8c8d', textAlign: 'center', marginBottom: '20px' }}>At 10,000 sparks, your Bloom reaches Apex form - the ultimate evolution!</p>
-
-            {/* Current progress */}
-            <div style={{ backgroundColor: '#0f172a', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ color: '#7f8c8d' }}>Current Sparks</span>
-                <span style={{ color: '#f39c12' }}>⚡ 9,876 / 10,000</span>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px' }}>🌸</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Bloom (2,500)</div>
               </div>
-              <div style={{ height: '8px', backgroundColor: '#1a1a2e', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ width: '98%', height: '100%', background: 'linear-gradient(90deg, #9B59B6, #E74C3C)', borderRadius: '4px' }} />
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px' }}>⭐</div>
+                <div style={{ fontSize: '10px', color: '#7f8c8d' }}>Apex (10,000)</div>
               </div>
-              <p style={{ fontSize: '10px', color: '#7f8c8d', marginTop: '8px', textAlign: 'center' }}>124 sparks until Apex evolution!</p>
             </div>
 
-            {/* Full evolution path */}
-            <div style={{ backgroundColor: '#0f172a', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
-              <div style={{ fontSize: '12px', color: '#7f8c8d', marginBottom: '12px', textAlign: 'center' }}>Your Evolution Journey</div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', flexWrap: 'wrap' }}>
-                {[
-                  { stage: 'Seed', variant: 'seed', path: null },
-                  { stage: 'Sprout', variant: 'worker', path: 'Builder' },
-                  { stage: 'Bloom', variant: 'worker', path: 'Architect' },
-                  { stage: 'Apex', variant: 'worker', path: '?', highlight: true }
-                ].map((s, i, arr) => (
-                  <React.Fragment key={s.stage}>
-                    <div style={{
+            {/* Variant choices at Seed */}
+            <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid #334155' }}>
+              <div style={{ fontSize: '12px', color: '#7f8c8d', marginBottom: '16px', textAlign: 'center' }}>Choose your seed variant</div>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                {Object.entries(SEED_VARIANTS).map(([variant, v]) => (
+                  <div
+                    key={variant}
+                    style={{
+                      backgroundColor: '#0f172a',
+                      borderRadius: '8px',
+                      padding: '12px',
+                      border: `2px solid ${v.color}`,
                       textAlign: 'center',
-                      padding: '8px',
-                      backgroundColor: s.highlight ? 'rgba(155, 89, 182, 0.2)' : 'transparent',
-                      borderRadius: '8px'
-                    }}>
-                      <Sprite variant={s.variant} state={s.highlight ? 'success' : 'idle'} size={36} />
-                      <div style={{ fontSize: '9px', color: s.highlight ? '#9B59B6' : '#fff', marginTop: '4px' }}>{s.stage}</div>
-                      {s.path && <div style={{ fontSize: '8px', color: '#7f8c8d' }}>{s.path}</div>}
-                    </div>
-                    {i < arr.length - 1 && (
-                      <span style={{ color: '#7f8c8d', fontSize: '14px', margin: '0 4px' }}>→</span>
-                    )}
-                  </React.Fragment>
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      minWidth: '80px'
+                    }}
+                  >
+                    <Sprite variant={variant} state="idle" size={48} />
+                    <div style={{ marginTop: '8px', fontWeight: 'bold', color: v.color, fontSize: '11px' }}>{v.name}</div>
+                  </div>
                 ))}
               </div>
-            </div>
-
-            {/* Apex form choices */}
-            <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', justifyContent: 'center' }}>
-              {Object.entries(STAGE_4_APEX_FORMS).map(([variant, forms]) => (
-                <div key={variant} style={{ flex: '1 1 280px', maxWidth: '320px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <Sprite variant={variant} state="idle" size={32} />
-                    <span style={{ color: SEED_VARIANTS[variant].color, fontWeight: 'bold', fontSize: '14px' }}>
-                      {SEED_VARIANTS[variant].name} Apex Forms
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', gap: '12px' }}>
-                    {Object.entries(forms).map(([formKey, formData]) => (
-                      <div
-                        key={formKey}
-                        style={{
-                          backgroundColor: '#1a1a2e',
-                          borderRadius: '12px',
-                          padding: '16px',
-                          flex: '1',
-                          border: '2px solid #9B59B6',
-                          textAlign: 'center',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s'
-                        }}
-                      >
-                        <div style={{ fontSize: '32px', marginBottom: '8px' }}>{formData.emoji}</div>
-                        <div style={{ fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>{formData.name}</div>
-                        <div style={{ fontSize: '10px', color: '#7f8c8d' }}>{formData.description}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
 
